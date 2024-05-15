@@ -43,7 +43,7 @@ const loginUser = async (req,res)=>{
 }
 
 
-const isLoggedIn = (req,res) => {
+/*const isLoggedIn = (req,res) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
         if (!token) {
@@ -64,10 +64,10 @@ const isLoggedIn = (req,res) => {
         throw new ApiError(401, error)
     }
     
-}
+}*/
 
 
 export {
     registerUser,
     loginUser,
-    isLoggedIn}
+    }
