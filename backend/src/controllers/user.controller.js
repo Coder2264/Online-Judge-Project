@@ -4,15 +4,22 @@ import {ApiError} from "../middlewares/ApiError.js";
 
 const registerUser= async (req,res)=>{
     try {
-        const {Handle,FullName, Email, Password, DOB} = req.body;
+        const {handle,fullName, email, password, dob} = req.body;
+        const existedUser = await  User.findOne({email});
+        if(existedUser){
+            throw new ApiError(409, "User already exists")
+        }
         const user = await User.create({
-            Handle,
-            FullName,
-            Email,
-            Password,
-            DOB
+            handle,
+            fullName,
+            email,
+            password,
+            dob
         });
-
+        const createdUser=await User.findById(user._id).select("-password");
+        if(!createdUser){
+            throw new ApiError(500, "Something went wrong while registering user")
+        }
         return res.status(201).json([user, "User Registered Successfully"])
     } catch (error) {
         throw new ApiError(400, error.message)
@@ -21,14 +28,14 @@ const registerUser= async (req,res)=>{
 
 const loginUser = async (req,res)=>{
     try {
-        const {Email, Password} = req.body;
+        const {email, password} = req.body;
         const user = await User.findOne({
-            Email
+            email
         });
         if(!user){
             throw new ApiError(404, "User not found")
         }
-        const isPasswordCorrect = await user.isPasswordCorrect(Password);
+        const isPasswordCorrect = await user.isPasswordCorrect(password);
         if(!isPasswordCorrect){
             throw new ApiError(400, "Invalid Password")
         }

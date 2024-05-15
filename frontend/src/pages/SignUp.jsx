@@ -19,14 +19,16 @@ function SignUp(){
 
     const registerUser = async (e) => {
         e.preventDefault();
-
+        //console.log(e);
+        console.log(data);
+        
         if(data.password!==data.confirmPassword){
             alert("Passwords do not match");
             return;
         }
 
         try{
-            /*await axios.post("http://localhost:3000/api/v1/users/register",data)
+            await axios.post("http://localhost:3000/api/v1/users/register",data)
             .then(
                 (res)=>{
                     console.log(res);
@@ -38,12 +40,13 @@ function SignUp(){
                     console.log(error);
                 }
             
-            )*/
-            console.log(data);
+            )
+            
         }
         catch(error){
             console.log(error);
         }
+        
     }
 
     return (

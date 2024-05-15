@@ -3,16 +3,16 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
 const userSchema = new mongoose.Schema({
-    Handle: {           //This is the user handle
+    handle: {           //This is the user handle
       type: String,
       trim: true,
       required: true
     },
-    Password: {
+    password: {
       type: String,
       required: [true,"Password is required"]
     },
-    Email: {
+    email: {
         type: String,
         required: true,
         unique: true,
@@ -20,10 +20,10 @@ const userSchema = new mongoose.Schema({
         trim: true,
         index: true 
     },
-    DOB: {
+    dob: {
       type: Date
     },
-    FullName:{
+    fullName:{
         type: String,
         trim: true,
         required: true
@@ -31,22 +31,22 @@ const userSchema = new mongoose.Schema({
   });
   
 userSchema.pre("save", async function (next) {
-    if(!this.isModified("Password")) return next();
+    if(!this.isModified("password")) return next();
 
-    this.Password = await bcrypt.hash(this.Password, 10)
+    this.Password = await bcrypt.hash(this.password, 10)
     next()
 })
 
 userSchema.methods.isPasswordCorrect = async function(password){
-    return await bcrypt.compare(password, this.Password)
+    return await bcrypt.compare(password, this.password)
 }
 
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
             _id: this._id,
-            Email: this.Email,
-            Handle: this.Handle
+            email: this.email,
+            handle: this.handle
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
