@@ -27,38 +27,33 @@ function SignUp(){
             return;
         }
 
-        try{
-            await axios.post("http://localhost:3000/api/v1/users/register",data)
-            .then(
-                (res)=>{
-                    console.log(res);
-                    navigate("/")
-                }
-            )
-            .catch(
-                (error)=>{
-                    console.log(error);
-                }
-            
-            )
-            
-        }
-        catch(error){
+        try {
+            const res = await axios.post("http://localhost:3000/api/v1/users/register", data);
+            console.log(res);
+            navigate("/");
+        } catch (error) {
             console.log(error);
         }
         
+    }
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setData((data)=>{
+           return  { ...data, [name]: value }
+        }
+        );
     }
 
     return (
         <>
           <h1>Sign Up</h1>
           <form onSubmit={registerUser}>
-            <input type="email" placeholder="Email" onChange={(e)=>setData({...data,email:e.target.value})} required/><br/>
-            <input type="text" placeholder="Full Name" onChange={(e)=>setData({...data,fullName:e.target.value})} required/><br/>
-            <input type="text" placeholder="Handle" onChange={(e)=>setData({...data,handle:e.target.value})} required/><br/>
-            <input type="password" placeholder="Password" onChange={(e)=>setData({...data,password:e.target.value})} required/><br/>
-            <input type="password" placeholder="Confirm Password" onChange={(e)=>setData({...data,confirmPassword:e.target.value})} required/><br/>
-            <input type="date" placeholder="Date of Birth" onChange={(e)=>setData({...data,dob:e.target.value})} required/><br/>
+            <input type="email" placeholder="Email" name="email" onChange={handleInputChange} required/><br/>
+            <input type="text" placeholder="Full Name" name="fullName" onChange={handleInputChange} required/><br/>
+            <input type="text" placeholder="Handle" name="handle" onChange={handleInputChange} required/><br/>
+            <input type="password" placeholder="Password" name="password" onChange={handleInputChange} required/><br/>
+            <input type="date" placeholder="Date of Birth" name="dob" onChange={handleInputChange} required/><br/>
             <button type="submit" className="bg-blue-500 text-white">Sign Up</button>  
             </form>
         </>    
