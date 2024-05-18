@@ -6,31 +6,13 @@ import axios from 'axios';
 
 function TaskPage(){
 
-    /*let task={
-        name: "Array reversal",
-        statement: "Write a function that takes an array of integers as input and returns the array reversed.",
-        constraints: [
-            "1 <= n <=1000",
-            "-1000 <= a[i] <= 1000"
-        ],
-        format: ["Input","n","a[1] a[2] a[3] a[4] .....","Output","b[1] b[2] b[3] ....."]        
-        ,
-        testcases: [
-            {
-                input: "1 2 3 4 5 ",
-                output: "5 4 3 2 1 "
-            },
-            {
-                input: "-1, -2, -3, -4, -5 ",
-                output: "-5, -4, -3, -2, -1 "
-            }
-        ],
-        tag: ["Array", "Reversal"]
-    }*/
-
     let task=localStorage.getItem("problem");
     task=JSON.parse(task);
-    
+
+    const navigate=useNavigate();
+    const submitSolution = () => {
+        navigate("/submit");
+    }
 
     return(
         <>
@@ -64,6 +46,9 @@ function TaskPage(){
                     </div>
                 ))}
             </div>
+            <button className="font-bold bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200 ease-in-out" onClick={submitSolution}>
+                Submit Solution!
+            </button>
         </div>
         <Footer/>
     </div>
