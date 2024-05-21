@@ -8,7 +8,7 @@ function ProfilePage(){
     return(
         <>
             <Navbar/>
-            <h1>ProfilePage</h1>
+            
             <Footer/>
         </>
     )

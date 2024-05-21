@@ -17,11 +17,21 @@ function SubmitPage() {
 
   const navigate=useNavigate();
   const submitSolution = () => {
-    console.log(data);
+    data.problemId=JSON.parse(problem)._id;
+    axios.post('http://localhost:3000/api/v1/submissions/submit/',data)
+    .then(response => {
+      console.log(response.data);
+      localStorage.setItem("verdict",JSON.stringify(response.data.data));
+    })
+    .catch(error => {
+      console.error('There was an error!', error);
+    });
+    
     navigate("/verdict");
   }
 
   return (
+    <>
     <div className="flex flex-col items-center bg-gray-100 min-h-screen">
       <Navbar/>
       <div className="w-3/4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4">
@@ -36,7 +46,7 @@ function SubmitPage() {
             <option value="Java">Java</option>
             <option value="Python">Python</option>
             <option value="JavaScript">JavaScript</option>
-            <option value="Awk">Others</option>
+            <option value="Awk">Awk</option>
           </select>
           <br/><br/>
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="language">
@@ -69,8 +79,9 @@ function SubmitPage() {
           </button>
         </div>
       </div>
-      <Footer/>
     </div>
+    <Footer/>
+    </>
   );
 }
 

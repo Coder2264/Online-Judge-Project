@@ -4,6 +4,12 @@ import { useState } from "react";
 
 function Login(){
 
+    const instance = axios.create({
+        withCredentials: true,
+        headers: {'Access-Control-Allow-Origin': '*'},
+        credentials: 'include',
+    })
+
     const [data,setData]=useState({
         email:"",
         password:""
@@ -53,7 +59,14 @@ function Login(){
                 </button>
             </div>
         </form>
+        <div className="text-center mt-4">
+        Not Registered?
+        <button className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(e)=>navigate('/register')}>
+            Sign Up
+        </button>
+        </div>
     </div>
+    
 </div>
     );
 }

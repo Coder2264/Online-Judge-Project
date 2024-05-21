@@ -1,10 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
-
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function SignUp(){
+    const instance = axios.create({
+        withCredentials: true,
+        headers: {'Access-Control-Allow-Origin': '*'},
+        credentials: 'include',
+    })
 
     const [data,setData]=useState({
         email:"",
@@ -19,8 +25,7 @@ function SignUp(){
 
     const registerUser = async (e) => {
         e.preventDefault();
-        //console.log(e);
-        console.log(data);
+        //console.log(data);
         
         if(data.password!==data.confirmPassword){
             alert("Passwords do not match");
@@ -28,10 +33,20 @@ function SignUp(){
         }
 
         try {
-            const res = await axios.post("http://localhost:3000/api/v1/users/register", data);
-            console.log(res);
-            navigate("/");
+            await axios.post("http://localhost:3000/api/v1/users/register", data)
+            .then((res) => {
+                console.log(res);
+                alert("User registered successfully");
+                navigate("/");
+            })
+            .catch((error) => {
+                console.log(error);
+                const htmlResponse = error.response.data.message;
+                console.log('Extracted message:', htmlResponse);
+                toast.error(htmlResponse, { autoClose: 2000 });
+            });
         } catch (error) {
+            console.log('Axios Error')
             console.log(error);
         }
         
@@ -40,6 +55,7 @@ function SignUp(){
 
     return (
         <>
+        <ToastContainer />
           <h1>Sign Up</h1>
           <form onSubmit={registerUser}>
             <input type="email" placeholder="Email" onChange={(e)=>setData({...data,email:e.target.value})} required/><br/>

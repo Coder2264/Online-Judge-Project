@@ -6,6 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function HomePage(){
+  const instance = axios.create({
+    withCredentials: true,
+    headers: {'Access-Control-Allow-Origin': '*'},
+    credentials: 'include',
+})
     const [problems, setProblems] = useState([]);
 
     useEffect(() => {
@@ -20,15 +25,15 @@ function HomePage(){
       
     return (
         <div>
-            <Navbar/>
-            <h1>Problems</h1>
-            <div className="flex flex-wrap">
-                {problems.map((task)=>(
-                    <ProblemCard problem={task}/>
-                ))}
-            </div>
-            <Footer/>
+        <Navbar/>
+        <h1>Problems</h1>
+        <div className="flex flex-wrap">
+          {problems.map((task)=>(
+            <ProblemCard key={task._id} problem={task}/>
+          ))}
         </div>
+        <Footer/>
+      </div>
     );
 }
 
