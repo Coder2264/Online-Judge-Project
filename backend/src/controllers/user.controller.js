@@ -86,7 +86,7 @@ const loginUser = async (req, res, next) => {
         }
         return res
             .status(200)
-            .cookie("token",token,options)
+            .cookie("accessToken",token,options)
             .json(
                 new ApiResponse(
                     200, 

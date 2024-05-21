@@ -12,7 +12,7 @@ const taskSchema = new mongoose.Schema({
         trim: true
     },
     constraints: {
-        type: [Schema.Types.Mixed],
+        type: [String],
         default: []
     },
     format: {
@@ -26,6 +26,14 @@ const taskSchema = new mongoose.Schema({
     tag: {
         type: [String],
         default: []
+    },
+    timeLimit: {
+        type: String,
+        default: 1
+    },
+    memoryLimit: {
+        type: String,
+        default: 256
     },
 }, {timestamps: true}
 )

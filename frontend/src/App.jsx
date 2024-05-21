@@ -6,6 +6,7 @@ import TaskPage from './pages/TaskPage';
 import VerdictPage from './pages/VerdictPage';
 import SubmitPage from './pages/SubmitPage';
 import ProfilePage from './pages/ProfilePage';
+import CreateTask from './pages/CreateTask';
 
 function App() {
   
@@ -20,6 +21,7 @@ function App() {
         <Route path="/verdict" element={<VerdictPage/>}/>
         <Route path="/submit" element={<SubmitPage/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
+        <Route path="/taskAdmin" element={<CreateTask/>}/>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
       </BrowserRouter>

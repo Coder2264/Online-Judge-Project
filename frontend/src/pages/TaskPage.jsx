@@ -45,6 +45,10 @@ function TaskPage(){
           </div>
         ))}
       </div>
+      <h2 className="font-bold text-2xl mb-2">Time Limit</h2>
+      <p className="mb-4">{task.timeLimit}</p>
+      <h2 className="font-bold text-2xl mb-2">Memory Limit</h2>
+      <p className="mb-4">{task.memoryLimit}</p>
       <button className="font-bold bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200 ease-in-out" onClick={submitSolution}>
         Submit Solution!
       </button>

@@ -4,14 +4,16 @@ import {Task} from "../models/tasks.model.js";
 
 const createTask = async (req, res, next) => {
     try {
-        const { name, statement, constraints, format, testcases, tag } = req.body;
+        const { name, statement, constraints, format, testcases, tag, timeLimit, memoryLimit } = req.body;
         const task = await Task.create({
             name,
             statement,
             constraints,
             format,
             testcases,
-            tag
+            tag,
+            timeLimit,
+            memoryLimit
         });
         return res.status(201).json(new ApiResponse(201, task));
     } catch (error) {
