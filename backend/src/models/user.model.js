@@ -35,11 +35,39 @@ const userSchema = new mongoose.Schema({
     problemsAttempted: {
         type: Number,
         default: 0
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
   });
   
 userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
 }
+
+
+userSchema.methods.generateAccessToken =function(){
+    return jwt.sign(
+      {
+        id: this._id,
+        isAdmin: this.isAdmin,
+        email: this.email
+      }, 
+      process.env.JWT_SECRET,
+      {expiresIn: "1h"}
+    )
+}
+
+userSchema.methods.generateRefreshToken =function(){
+    return jwt.sign(
+      {
+        id: this._id,
+      }, 
+      process.env.JWT_SECRET,
+      {expiresIn: "1h"}
+    )
+}
+
 
 export const User = mongoose.model("User", userSchema)
