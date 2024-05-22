@@ -55,18 +55,56 @@ function SignUp(){
 
     return (
         <>
-        <ToastContainer />
-          <h1>Sign Up</h1>
-          <form onSubmit={registerUser}>
-            <input type="email" placeholder="Email" onChange={(e)=>setData({...data,email:e.target.value})} required/><br/>
-            <input type="text" placeholder="Full Name" onChange={(e)=>setData({...data,fullName:e.target.value})} required/><br/>
-            <input type="text" placeholder="Handle" onChange={(e)=>setData({...data,handle:e.target.value})} required/><br/>
-            <input type="password" placeholder="Password" onChange={(e)=>setData({...data,password:e.target.value})} required/><br/>
-            <input type="password" placeholder="Confirm Password" onChange={(e)=>setData({...data,confirmPassword:e.target.value})} required/><br/>
-            <input type="date" placeholder="Date of Birth" onChange={(e)=>setData({...data,dob:e.target.value})} required/><br/>
-            <button type="submit" className="bg-blue-500 text-white">Sign Up</button>  
-            </form>
-        </>    
+    <ToastContainer />
+    <div className="container mx-auto px-4">
+        <h1 className="text-4xl font-bold mb-4">Sign Up</h1>
+        <form onSubmit={registerUser} className="space-y-4">
+        <input
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setData({ ...data, email: e.target.value })}
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+        />
+        <input
+            type="text"
+            placeholder="Full Name"
+            onChange={(e) => setData({ ...data, fullName: e.target.value })}
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+        />
+        <input
+            type="text"
+            placeholder="Handle"
+            onChange={(e) => setData({ ...data, handle: e.target.value })}
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+        />
+        <input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setData({ ...data, password: e.target.value })}
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+        />
+        <input
+            type="password"
+            placeholder="Confirm Password"
+            onChange={(e) => setData({ ...data, confirmPassword: e.target.value })}
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+        />
+        <input
+            type="date"
+            placeholder="Date of Birth"
+            onChange={(e) => setData({ ...data, dob: e.target.value })}
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+        />
+        <button type="submit" className="w-full px-4 py-2 bg-blue-500 text-white rounded">Sign Up</button>
+        </form>
+    </div>
+</>    
     );
 }
 
