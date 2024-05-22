@@ -7,6 +7,7 @@ import VerdictPage from './pages/VerdictPage';
 import SubmitPage from './pages/SubmitPage';
 import ProfilePage from './pages/ProfilePage';
 import CreateTask from './pages/CreateTask';
+import JustAPage from './pages/TestingAndDebugging';
 
 function App() {
   
@@ -22,6 +23,7 @@ function App() {
         <Route path="/submit" element={<SubmitPage/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/taskAdmin" element={<CreateTask/>}/>
+        <Route path="/testing" element={<JustAPage/>}/>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
       </BrowserRouter>

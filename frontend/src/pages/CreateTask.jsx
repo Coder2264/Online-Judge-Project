@@ -13,7 +13,7 @@ function CreateTask() {
     name: "",
     statement: "",
     constraints: ["", ""],
-    format: ["", ""],
+    format: "",
     testcases: [{ input: [""], output: [""] }, { input: [""], output: [""] }],
     tag: [],
     timeLimit: "",
@@ -42,12 +42,14 @@ function CreateTask() {
     });
   };
 
-  const handleAddFormat = () => {
+
+  const handleDeleteConstraint = (index) => {
     setData(prevData => {
-      const newFormat = [...prevData.format, ''];
-      return { ...prevData, format: newFormat };
+      const newConstraints = prevData.constraints.filter((_, i) => i !== index);
+      return { ...prevData, constraints: newConstraints };
     });
   };
+
 
   const handleInputChange = (field, value) => {
     setData(prevData => ({ ...prevData, [field]: value }));
@@ -72,7 +74,7 @@ function CreateTask() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="mb-5 text-3xl font-bold text-gray-700">Create Problem</h1>
-      <form onSubmit={createTask} className="w-full max-w-lg">
+      <div className="w-full max-w-lg">
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full px-3">
             <input
@@ -94,8 +96,9 @@ function CreateTask() {
           </div>
         </div>
 
-        {data.constraints.map((constraint, index) => (
-          <div className="flex flex-wrap -mx-3 mb-6 bg-white rounded shadow p-4">
+        <div className="flex flex-wrap -mx-3 mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-2xl font-bold text-gray-700">Constraints</h2>
+          {data.constraints.map((constraint, index) => (
             <div className="w-full px-3">
               <textarea
                 className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
@@ -104,58 +107,56 @@ function CreateTask() {
                 value={constraint}
                 onChange={(e) => handleArrayChange('constraints', index, e.target.value)}
               />
+              <button onClick={() => handleDeleteConstraint(index)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none focus:shadow-outline">Delete</button>
             </div>
+          ))}
+          <button onClick={handleAddConstraint} className="w-full px-4 py-2 mt-3 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">Add Constraint</button>
+
+        </div>
+
+        <div className="flex flex-wrap -mx-3 mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-2xl font-bold text-gray-700">Format</h2>
+          <div className="w-full px-3">
+            <textarea
+              className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
+              placeholder="Format"
+              value={data.format}
+              onChange={(e) => handleInputChange('format', e.target.value)}
+            />
           </div>
-        ))}
-        <button onClick={handleAddConstraint} className="mb-6 px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">Add Constraint</button>
+        </div>
 
-        {data.format.map((format, index) => (
-          <div className="flex flex-wrap -mx-3 mb-6 bg-white rounded shadow p-4">
-            <div className="w-full px-3">
-              <textarea
-                className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
-                key={index}
-                placeholder={`Format ${index + 1}`}
-                value={format}
-                onChange={(e) => handleArrayChange('format', index, e.target.value)}
-              />
-            </div>
-          </div>
-        ))}
-        <button onClick={handleAddFormat} className="mb-6 px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">Add Format</button>
-
-
-        {data.testcases.map((testcase, testcaseIndex) => (
-          <div key={testcaseIndex}>
-            {testcase.input.map((input, index) => (
-              <div className="flex flex-wrap -mx-3 mb-6">
-                <div className="w-full px-3">
+        <div className="flex flex-wrap -mx-3 mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-2xl font-bold text-gray-700">Test Cases</h2>
+          {data.testcases.map((testcase, testcaseIndex) => (
+            <div key={testcaseIndex} className="w-full px-3 mb-6 bg-gray-200 rounded shadow p-4">
+              <h3 className="mb-3 text-xl font-bold text-gray-700">Testcase {testcaseIndex + 1}</h3>
+              {testcase.input.map((input, index) => (
+                <div className="w-full px-3 mb-3">
                   <textarea
-                    className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
+                    className="w-full px-4 py-3 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
                     key={index}
                     placeholder={`Input ${index + 1}`}
                     value={input}
                     onChange={(e) => handleTestcaseChange(testcaseIndex, 'input', index, e.target.value)}
                   />
                 </div>
-              </div>
-            ))}
+              ))}
 
-            {testcase.output.map((output, index) => (
-              <div className="flex flex-wrap -mx-3 mb-6">
-                <div className="w-full px-3">
+              {testcase.output.map((output, index) => (
+                <div className="w-full px-3 mb-3">
                   <textarea
-                    className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
+                    className="w-full px-4 py-3 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
                     key={index}
                     placeholder={`Output ${index + 1}`}
                     value={output}
                     onChange={(e) => handleTestcaseChange(testcaseIndex, 'output', index, e.target.value)}
                   />
                 </div>
-              </div>
-            ))}
-          </div>
-        ))}
+              ))}
+            </div>
+          ))}
+        </div>
 
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full px-3">
@@ -184,12 +185,13 @@ function CreateTask() {
             <button
               className="w-full px-4 py-2 font-bold text-white bg-purple-500 rounded hover:bg-purple-700 focus:outline-none focus:shadow-outline"
               type="submit"
+              onClick={createTask}
             >
               Create Task
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   )
 }
