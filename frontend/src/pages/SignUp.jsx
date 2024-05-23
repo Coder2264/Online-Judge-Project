@@ -33,7 +33,7 @@ function SignUp(){
         }
 
         try {
-            await axios.post("http://localhost:3000/api/v1/users/register", data)
+            await instance.post("http://localhost:3000/api/v1/users/register", data)
             .then((res) => {
                 console.log(res);
                 alert("User registered successfully");

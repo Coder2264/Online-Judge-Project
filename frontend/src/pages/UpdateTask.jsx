@@ -1,97 +1,120 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
-function CreateTask() {
+function UpdateTask() {
   const instance = axios.create({
     withCredentials: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
     credentials: 'include',
-  })
+  });
 
-  const [data, setData] = useState({
+  const { id } = useParams(); // assuming the id of the task is passed as a URL parameter
+  const navigate = useNavigate();
+
+  const [initialValues, setInitialValues] = useState({
     name: "",
     statement: "",
-    constraints: ["", ""],
+    constraints: [],
     format: "",
-    testcases: [{ input: [""], output: [""] }, { input: [""], output: [""] }],
+    testcases: [],
     tag: [],
     timeLimit: "",
     memoryLimit: ""
   });
 
-  const navigate = useNavigate();
-
-  const createTask = async (e) => {
-    e.preventDefault();
-    console.log(data);
-
-    try {
-      const res = await instance.post("http://localhost:3000/api/v1/tasks/", data);
-      console.log(res);
-      navigate("/home");
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    async function fetchData() {
+      const response = await instance.get(`http://localhost:3000/api/v1/tasks/${id}`);
+      setInitialValues(response.data);
     }
-  }
+    fetchData();
+  }, [id]);
+
+  const { values, handleChange, handleSubmit } = useForm({
+    initialValues,
+    onSubmit: async (values) => {
+      try {
+        const res = await instance.put(`http://localhost:3000/api/v1/tasks/${id}`, values);
+        console.log(res);
+        navigate("/home");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
 
   const handleAddConstraint = () => {
-    setData(prevData => {
-      const newConstraints = [...prevData.constraints, ''];
-      return { ...prevData, constraints: newConstraints };
+    handleChange({
+      target: {
+        name: 'constraints',
+        value: [...values.constraints, ''],
+      },
     });
   };
 
-
   const handleDeleteConstraint = (index) => {
-    setData(prevData => {
-      const newConstraints = prevData.constraints.filter((_, i) => i !== index);
-      return { ...prevData, constraints: newConstraints };
+    handleChange({
+      target: {
+        name: 'constraints',
+        value: values.constraints.filter((_, i) => i !== index),
+      },
     });
   };
 
   const handleAddTestcase = () => {
-    setData(prevData => {
-      const newTestcases = [...prevData.testcases, { input: [""], output: [""] }];
-      return { ...prevData, testcases: newTestcases };
+    handleChange({
+      target: {
+        name: 'testcases',
+        value: [...values.testcases, { input: [""], output: [""] }],
+      },
     });
   };
 
   const handleDeleteTestcase = (index) => {
-    setData(prevData => {
-      const newTestcases = prevData.testcases.filter((_, i) => i !== index);
-      return { ...prevData, testcases: newTestcases };
+    handleChange({
+      target: {
+        name: 'testcases',
+        value: values.testcases.filter((_, i) => i !== index),
+      },
     });
   };
 
-
-  const handleInputChange = (field, value) => {
-    setData(prevData => ({ ...prevData, [field]: value }));
-  };
-
   const handleArrayChange = (field, index, value) => {
-    setData(prevData => {
-      const newArray = [...prevData[field]];
-      newArray[index] = value;
-      return { ...prevData, [field]: newArray };
+    handleChange({
+      target: {
+        name: field,
+        value: values[field].map((item, i) => (i === index ? value : item)),
+      },
     });
   };
 
   const handleTestcaseChange = (testcaseIndex, field, index, value) => {
-    setData(prevData => {
-      const newTestcases = [...prevData.testcases];
-      newTestcases[testcaseIndex][field][index] = value;
-      return { ...prevData, testcases: newTestcases };
+    handleChange({
+      target: {
+        name: 'testcases',
+        value: values.testcases.map((testcase, i) =>
+          i === testcaseIndex
+            ? { ...testcase, [field]: testcase[field].map((item, j) => (j === index ? value : item)) }
+            : testcase
+        ),
+      },
     });
   };
 
   const handleTagChange = (value) => {
-    setData(prevData => ({ ...prevData, tag: value.split(',') }));
+    handleChange({
+      target: {
+        name: 'tag',
+        value: value.split(','),
+      },
+    });
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="mb-5 text-3xl font-bold text-gray-700">Create Problem</h1>
+      <h1 className="mb-5 text-3xl font-bold text-gray-700">Update Problem</h1>
       <div className="w-full max-w-lg">
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full px-3">
@@ -99,7 +122,7 @@ function CreateTask() {
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
               type="text"
               placeholder="Name"
-              onChange={(e) => handleInputChange('name', e.target.value)}
+              onChange={handleNameChange}
             />
           </div>
         </div>
@@ -109,7 +132,7 @@ function CreateTask() {
             <textarea
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
               placeholder="Statement"
-              onChange={(e) => handleInputChange('statement', e.target.value)}
+              onChange={handleStatementChange}
             />
           </div>
         </div>
@@ -139,7 +162,7 @@ function CreateTask() {
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
               placeholder="Format"
               value={data.format}
-              onChange={(e) => handleInputChange('format', e.target.value)}
+              onChange={handleFormatChange}
             />
           </div>
         </div>
@@ -184,7 +207,7 @@ function CreateTask() {
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
               type="text"
               placeholder="Time Limit"
-              onChange={(e) => handleInputChange('timeLimit', e.target.value)}
+              onChange={handleTimeLimitChange}
             />
           </div>
         </div>
@@ -195,7 +218,7 @@ function CreateTask() {
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
               type="text"
               placeholder="Memory Limit"
-              onChange={(e) => handleInputChange('memoryLimit', e.target.value)}
+              onChange={handleMemoryLimitChange}
             />
           </div>
         </div>
@@ -213,18 +236,18 @@ function CreateTask() {
 
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full px-3">
-            <button
-              className="w-full px-4 py-2 font-bold text-white bg-purple-500 rounded hover:bg-purple-700 focus:outline-none focus:shadow-outline"
-              type="submit"
-              onClick={createTask}
-            >
-              Create Task
-            </button>
-          </div>
+    <button
+      className="w-full px-4 py-2 font-bold text-white bg-purple-500 rounded hover:bg-purple-700 focus:outline-none focus:shadow-outline"
+      type="submit"
+      onClick={updateTask}
+    >
+      Update Task
+    </button>
+    </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default CreateTask;
+export default UpdateTask;

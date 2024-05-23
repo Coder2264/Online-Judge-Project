@@ -7,6 +7,12 @@ import axios from 'axios';
 
 function SubmitPage() {
 
+  const instance = axios.create({
+    withCredentials: true,
+    headers: {'Access-Control-Allow-Origin': '*'},
+    credentials: 'include',
+})
+
   const [data,setData]=useState({
     language:"",
     sourceCode:""
@@ -18,7 +24,7 @@ function SubmitPage() {
   const navigate=useNavigate();
   const submitSolution = () => {
     data.problemId=JSON.parse(problem)._id;
-    axios.post('http://localhost:3000/api/v1/submissions/submit/',data)
+    instance.post('http://localhost:3000/api/v1/submissions/submit/',data)
     .then(response => {
       console.log(response.data);
       localStorage.setItem("verdict",JSON.stringify(response.data.data));

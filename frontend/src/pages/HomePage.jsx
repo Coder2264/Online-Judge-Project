@@ -14,7 +14,7 @@ function HomePage(){
     const [problems, setProblems] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/v1/tasks/')
+        instance.get('http://localhost:3000/api/v1/tasks/')
           .then(response => {
             setProblems(response.data.data);    //axios wraps the response in a data object and server response is an api
           })

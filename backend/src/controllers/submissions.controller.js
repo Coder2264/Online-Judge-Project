@@ -1,13 +1,17 @@
-import {ApiError} from "../middlewares/ApiError.js";
-import {ApiResponse} from "../middlewares/ApiResponse.js";
+import {ApiError} from "../utilities/ApiError.js";
+import {ApiResponse} from "../utilities/ApiResponse.js";
 import {Submission} from "../models/submissions.model.js";
 
 const createSubmission = async (req, res, next) => {
     try {
-        const {user, task, code, language, verdict, execTime, memory, submissionTime } = req.body;
+        let user=req.user;
+        if(!user.isAdmin){
+            throw new ApiError(403, "You are not authorized to submit the code");
+        }
+        const {userId, taskId, code, language, verdict, execTime, memory, submissionTime } = req.body;
         const submission = await Submission.create({
-            user,
-            task,
+            userId,
+            taskId,
             code,
             language,
             verdict,

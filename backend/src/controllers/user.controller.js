@@ -1,13 +1,33 @@
 import {User} from "../models/user.model.js";
-import {ApiError} from "../middlewares/ApiError.js";
-import {ApiResponse} from "../middlewares/ApiResponse.js";
+import {ApiError} from "../utilities/ApiError.js";
+import {ApiResponse} from "../utilities/ApiResponse.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
+const generateAccessAndRefereshTokens = async(userId) =>{
+    try {
+        const user = await User.findById(userId)
+        // const accessToken = user.generateAccessToken()
+        // const refreshToken = user.generateRefreshToken()
+
+        //user.refreshToken = refreshToken
+        //await user.save({ validateBeforeSave: false })
+        let accessToken="hello";
+        let refreshToken="world";
+        console.log(user);
+
+        return {accessToken, refreshToken}
+
+
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while generating referesh and access token");
+    }
+}
 
 const registerUser = async (req, res, next) => {
     try {
         //take user details from frontend
-        let { handle, fullName, email, password, dob } = req.body;
+        let { handle, fullName, email, password, dob} = req.body;
 
         // Validate fields
         if (!handle || !fullName || !email || !password || !dob) {
@@ -32,7 +52,7 @@ const registerUser = async (req, res, next) => {
             handle,
             fullName,
             email,
-            password : hashedpassword,
+            password,
             dob
         });
 
@@ -72,31 +92,36 @@ const loginUser = async (req, res, next) => {
         }
 
         // Checking if password is correct
+        
         const isPasswordCorrect = await user.isPasswordCorrect(password);
         if (!isPasswordCorrect) {
             throw new ApiError(400, "Invalid Password");
         }
 
-        user.password=null;
-
-        const token = jwt.sign({id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
-        const options={
-            expires: new Date(Date.now() + 24*60*60*1000),
-            httpOnly:true
+        //const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
+        user.password = undefined;
+        let accessToken = jwt.sign({id: user._id,Admin: user.isAdmin, handle: user.handle}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "1h"});
+        let refreshToken = jwt.sign({id: user._id}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "10d"});
+        
+        const options = {
+            httpOnly: true,
+            
         }
-        return res
-            .status(200)
-            .cookie("accessToken",token,options)
-            .json(
-                new ApiResponse(
-                    200, 
-                    {
-                        user,
-                        token
-                    },
-                    "User Logged In Successfully"
-                )
-            );
+        
+        return res 
+        .status(200)
+        .cookie("accessToken", accessToken,options)
+        .cookie("refreshToken", refreshToken,options)
+        .json(
+            new ApiResponse(
+                200, 
+                {
+                    user: user, accessToken, refreshToken
+                    
+                },
+                "User logged In Successfully"
+            )
+        )
     } catch (error) {
         next(new ApiError(400, error.message));
     }

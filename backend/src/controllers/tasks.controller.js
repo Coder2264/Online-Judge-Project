@@ -1,9 +1,12 @@
-import {ApiError} from "../middlewares/ApiError.js";
-import {ApiResponse} from "../middlewares/ApiResponse.js";
+import {ApiError} from "../utilities/ApiError.js";
+import {ApiResponse} from "../utilities/ApiResponse.js";
 import {Task} from "../models/tasks.model.js";
 
 const createTask = async (req, res, next) => {
     try {
+        if(!req.user.isAdmin){
+            throw new ApiError(403, "You are not authorized to add tasks");
+        }
         const { name, statement, constraints, format, testcases, tag, timeLimit, memoryLimit } = req.body;
         const task = await Task.create({
             name,
@@ -23,6 +26,9 @@ const createTask = async (req, res, next) => {
 
 const updateTask = async (req, res, next) => {
     try {
+        if(!req.user.isAdmin){
+            throw new ApiError(403, "You are not authorized to update tasks");
+        }
         const {_id }= req.params;
         const {name, statement, constraints, format, testcases, tag } = req.body;
         const task = await Task.findByIdAndUpdate(_id, {
@@ -43,6 +49,9 @@ const updateTask = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
     try {
+        if(!req.user.isAdmin){
+            throw new ApiError(403, "You are not authorized to delete tasks");
+        }
         const { _id } = req.params;
         const task = await Task.findByIdAndDelete(_id);
         return res.status(200).json(new ApiResponse(200, task));

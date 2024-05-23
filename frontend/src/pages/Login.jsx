@@ -22,7 +22,7 @@ function Login(){
         console.log(data);
 
         try {
-            const res = await axios.post("http://localhost:3000/api/v1/users/login", data);
+            const res = await instance.post("http://localhost:3000/api/v1/users/login", data);
             console.log(res);
             navigate("/home");
         } catch (error) {

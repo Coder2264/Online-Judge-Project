@@ -16,7 +16,7 @@ const taskSchema = new mongoose.Schema({
         default: []
     },
     format: {
-        type: [String],
+        type: String,
         default: []
     },
     testcases: {
