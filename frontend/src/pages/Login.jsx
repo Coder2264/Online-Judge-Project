@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "./Axios";
+import axiosInstance from "../Axios";
 import { useState } from "react";
 
 function Login(){

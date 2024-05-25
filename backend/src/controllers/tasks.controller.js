@@ -30,14 +30,16 @@ const updateTask = async (req, res, next) => {
             throw new ApiError(403, "You are not authorized to update tasks");
         }
         const {_id }= req.params;
-        const {name, statement, constraints, format, testcases, tag } = req.body;
+        const {name, statement, constraints, format, testcases, tag, memoryLimit, timeLimit } = req.body;
         const task = await Task.findByIdAndUpdate(_id, {
             name,
             statement,
             constraints,
             format,
             testcases,
-            tag
+            tag,
+            memoryLimit,
+            timeLimit
         });
         const updatedTask = await Task.findById(_id);
         return res.status(200).json(new ApiResponse(200,updatedTask));

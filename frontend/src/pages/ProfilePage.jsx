@@ -2,7 +2,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from "./Axios";
+import axiosInstance from "../Axios";
 
 function ProfilePage() {
 
@@ -19,11 +19,11 @@ function ProfilePage() {
     });
 
     const handleImageUpload = (event) => {
-        
+        console.log("tried to upload image");
     };
 
     const handleUpdate = () => {
-        
+        console.log("tried to update");
     };
 
     return (

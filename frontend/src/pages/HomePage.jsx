@@ -3,7 +3,7 @@ import Footer from '../components/Footer';
 import ProblemCard from '../components/ProblemCard';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from './Axios';
+import axiosInstance from '../Axios';
 
 function HomePage() {
   

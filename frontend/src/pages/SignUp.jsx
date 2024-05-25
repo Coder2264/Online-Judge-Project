@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import axiosInstance from "./Axios";
+import axiosInstance from "../Axios";
 
 
 function SignUp(){

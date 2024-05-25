@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import back from '../assets/back.jpg';
-import axiosInstance from './Axios';
+import axiosInstance from '../Axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -61,15 +61,6 @@ function UpdateTask() {
 
   const updateTask = async (e) => {
     e.preventDefault();
-    /*const updatedTask = new FormData();
-    updatedTask.append("name", data.name);
-    updatedTask.append("statement", data.statement);
-    updatedTask.append("format", data.format);
-    updatedTask.append("constraints", data.constraints);
-    //updatedTask.append("testcases", testcases);
-    //updatedTask.append("tag", tag);
-    updatedTask.append("timeLimit", data.timeLimit);
-    updatedTask.append("memoryLimit", data.memoryLimit);*/
 
     try {
       const res = await axiosInstance.put(`/tasks/${id}`, data);
@@ -78,9 +69,7 @@ function UpdateTask() {
     } catch (error) {
       console.log(error);
     }
-    /*for (let pair of updatedTask.entries()) {
-        console.log(pair[0]+ ', '+ pair[1]); 
-    }*/
+    //console.log(data);
   }
 
   const handleAddTestcase = () => {
@@ -197,10 +186,10 @@ function UpdateTask() {
                   />
                 </div>
               ))}
-              <button onClick={() => handleDeleteTestcase(testcaseIndex)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none focus:shadow-outline">Delete Test Case</button>
+              <button type="button" onClick={() => handleDeleteTestcase(testcaseIndex)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none focus:shadow-outline">Delete Test Case</button>
             </div>
           ))}
-          <button onClick={handleAddTestcase} className="w-full px-4 py-2 mt-3 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">Add Test Case</button>
+          <button type="button" onClick={handleAddTestcase} className="w-full px-4 py-2 mt-3 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">Add Test Case</button>
         </div>
 
         <div className="mb-6 bg-white rounded shadow p-4">

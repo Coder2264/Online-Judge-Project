@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from './Axios';
+import axiosInstance from '../Axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 

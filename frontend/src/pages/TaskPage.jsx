@@ -2,7 +2,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from './Axios';
+import axiosInstance from '../Axios';
 
 function TaskPage() {
 
@@ -46,6 +46,12 @@ function TaskPage() {
           <p className="mb-4">{task.timeLimit}</p>
           <h2 className="font-bold text-2xl mb-2">Memory Limit</h2>
           <p className="mb-4">{task.memoryLimit}</p>
+          <h2 className="font-bold text-2xl mb-2">Tags</h2>
+          <ul className="list-disc pl-5 mb-4">
+            {task.tag.map((onetag, index) => (
+              <li key={index} className="mb-1">{onetag}</li>
+            ))}
+          </ul>
           <button className="font-bold bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200 ease-in-out" onClick={submitSolution}>
             Submit Solution!
           </button>
