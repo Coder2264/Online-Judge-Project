@@ -23,8 +23,8 @@ function App() {
         <Route path="/verdict" element={<VerdictPage/>}/>
         <Route path="/submit" element={<SubmitPage/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
-        <Route path="/taskAdmin" element={<CreateTask/>}/>
-        <Route path="/taskAdmin/:id" element={<UpdateTask/>}/>
+        <Route path="/createTask" element={<CreateTask/>}/>
+        <Route path="/editTask" element={<UpdateTask/>}/>
         <Route path="/testing" element={<JustAPage/>}/>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>

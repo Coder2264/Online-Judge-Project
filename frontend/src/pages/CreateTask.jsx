@@ -1,18 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from './Axios';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 function CreateTask() {
-  const instance = axios.create({
-    withCredentials: true,
-    headers: { 'Access-Control-Allow-Origin': '*' },
-    credentials: 'include',
-  })
+  
 
   const [data, setData] = useState({
     name: "",
     statement: "",
-    constraints: ["", ""],
+    constraints: "",
     format: "",
     testcases: [{ input: [""], output: [""] }, { input: [""], output: [""] }],
     tag: [],
@@ -22,12 +20,27 @@ function CreateTask() {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      try {
+        const response = await axiosInstance.post("/users/isloggedin");
+        console.log(response);
+        if (!response.data.data.isAdmin) {
+          navigate('/');
+        }
+      } catch (error) {
+        navigate('/');
+      }
+    };
+    isLoggedIn();
+  }, []);
+
   const createTask = async (e) => {
     e.preventDefault();
     console.log(data);
 
     try {
-      const res = await instance.post("http://localhost:3000/api/v1/tasks/", data);
+      const res = await axiosInstance.post("/tasks/", data);
       console.log(res);
       navigate("/home");
     } catch (error) {
@@ -35,21 +48,7 @@ function CreateTask() {
     }
   }
 
-  const handleAddConstraint = () => {
-    setData(prevData => {
-      const newConstraints = [...prevData.constraints, ''];
-      return { ...prevData, constraints: newConstraints };
-    });
-  };
-
-
-  const handleDeleteConstraint = (index) => {
-    setData(prevData => {
-      const newConstraints = prevData.constraints.filter((_, i) => i !== index);
-      return { ...prevData, constraints: newConstraints };
-    });
-  };
-
+  
   const handleAddTestcase = () => {
     setData(prevData => {
       const newTestcases = [...prevData.testcases, { input: [""], output: [""] }];
@@ -69,14 +68,6 @@ function CreateTask() {
     setData(prevData => ({ ...prevData, [field]: value }));
   };
 
-  const handleArrayChange = (field, index, value) => {
-    setData(prevData => {
-      const newArray = [...prevData[field]];
-      newArray[index] = value;
-      return { ...prevData, [field]: newArray };
-    });
-  };
-
   const handleTestcaseChange = (testcaseIndex, field, index, value) => {
     setData(prevData => {
       const newTestcases = [...prevData.testcases];
@@ -90,50 +81,51 @@ function CreateTask() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <>
+    <Navbar />
+    <form onSubmit={createTask} className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="mb-5 text-3xl font-bold text-gray-700">Create Problem</h1>
-      <div className="w-full max-w-lg">
-        <div className="flex flex-wrap -mx-3 mb-6">
+      <div className="w-full max-w-[50rem]">
+      
+
+      <div className="mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Name</h2>
           <div className="w-full px-3">
-            <input
+            <textarea
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
-              type="text"
               placeholder="Name"
+              value={data.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
             />
           </div>
         </div>
 
-        <div className="flex flex-wrap -mx-3 mb-6">
+      <div className="mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Statement</h2>
           <div className="w-full px-3">
             <textarea
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
               placeholder="Statement"
+              value={data.statement}
               onChange={(e) => handleInputChange('statement', e.target.value)}
             />
           </div>
         </div>
 
-        <div className="flex flex-wrap -mx-3 mb-6 bg-white rounded shadow p-4">
-          <h2 className="w-full px-3 mb-3 text-2xl font-bold text-gray-700">Constraints</h2>
-          {data.constraints.map((constraint, index) => (
-            <div className="w-full px-3">
-              <textarea
-                className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
-                key={index}
-                placeholder={`Constraint ${index + 1}`}
-                value={constraint}
-                onChange={(e) => handleArrayChange('constraints', index, e.target.value)}
-              />
-              <button onClick={() => handleDeleteConstraint(index)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none focus:shadow-outline">Delete</button>
-            </div>
-          ))}
-          <button onClick={handleAddConstraint} className="w-full px-4 py-2 mt-3 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">Add Constraint</button>
-
+        <div className="mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Constraints</h2>
+          <div className="w-full px-3">
+            <textarea
+              className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
+              placeholder="Constraints"
+              value={data.constraints}
+              onChange={(e) => handleInputChange('constraints', e.target.value)}
+            />
+          </div>
         </div>
 
-        <div className="flex flex-wrap -mx-3 mb-6 bg-white rounded shadow p-4">
-          <h2 className="w-full px-3 mb-3 text-2xl font-bold text-gray-700">Format</h2>
+        <div className="mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Format</h2>
           <div className="w-full px-3">
             <textarea
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
@@ -178,29 +170,32 @@ function CreateTask() {
           <button onClick={handleAddTestcase} className="w-full px-4 py-2 mt-3 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">Add Test Case</button>
         </div>
 
-        <div className="flex flex-wrap -mx-3 mb-6">
+        <div className="mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Time Limit</h2>
           <div className="w-full px-3">
-            <input
+            <textarea
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
-              type="text"
               placeholder="Time Limit"
+              value={data.timeLimit}
               onChange={(e) => handleInputChange('timeLimit', e.target.value)}
             />
           </div>
         </div>
 
-        <div className="flex flex-wrap -mx-3 mb-6">
+        <div className="mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Memory Limit</h2>
           <div className="w-full px-3">
-            <input
+            <textarea
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
-              type="text"
               placeholder="Memory Limit"
+              value={data.memoryLimit}
               onChange={(e) => handleInputChange('memoryLimit', e.target.value)}
             />
           </div>
         </div>
 
-        <div className="flex flex-wrap -mx-3 mb-6">
+        <div className="mb-6 bg-white rounded shadow p-4">
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Tags</h2>
           <div className="w-full px-3">
             <input
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
@@ -216,14 +211,16 @@ function CreateTask() {
             <button
               className="w-full px-4 py-2 font-bold text-white bg-purple-500 rounded hover:bg-purple-700 focus:outline-none focus:shadow-outline"
               type="submit"
-              onClick={createTask}
             >
               Create Task
             </button>
           </div>
         </div>
+        
       </div>
-    </div>
+    </form>
+    <Footer />
+    </>
   )
 }
 

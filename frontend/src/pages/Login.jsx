@@ -1,14 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "./Axios";
 import { useState } from "react";
 
 function Login(){
 
-    const instance = axios.create({
-        withCredentials: true,
-        headers: {'Access-Control-Allow-Origin': '*'},
-        credentials: 'include',
-    })
 
     const [data,setData]=useState({
         email:"",
@@ -22,8 +17,9 @@ function Login(){
         console.log(data);
 
         try {
-            const res = await instance.post("http://localhost:3000/api/v1/users/login", data);
+            const res = await axiosInstance.post("/users/login", data);
             console.log(res);
+            localStorage.setItem('handle',res.data.data.user.handle);
             navigate("/home");
         } catch (error) {
             console.log(error);

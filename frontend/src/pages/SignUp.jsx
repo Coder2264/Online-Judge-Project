@@ -1,16 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import axiosInstance from "./Axios";
 
 
 function SignUp(){
-    const instance = axios.create({
-        withCredentials: true,
-        headers: {'Access-Control-Allow-Origin': '*'},
-        credentials: 'include',
-    })
 
     const [data,setData]=useState({
         email:"",
@@ -33,7 +28,7 @@ function SignUp(){
         }
 
         try {
-            await instance.post("http://localhost:3000/api/v1/users/register", data)
+            await axiosInstance.post("/users/register", data)
             .then((res) => {
                 console.log(res);
                 alert("User registered successfully");

@@ -2,16 +2,13 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import React,{useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from './Axios';
+
 
 
 function SubmitPage() {
 
-  const instance = axios.create({
-    withCredentials: true,
-    headers: {'Access-Control-Allow-Origin': '*'},
-    credentials: 'include',
-})
+  
 
   const [data,setData]=useState({
     language:"",
@@ -22,9 +19,9 @@ function SubmitPage() {
   let problemName=JSON.parse(problem).name;
 
   const navigate=useNavigate();
-  const submitSolution = () => {
+  const submitSolution = async () => {
     data.problemId=JSON.parse(problem)._id;
-    instance.post('http://localhost:3000/api/v1/submissions/submit/',data)
+    await axiosInstance.post('/submissions/submit/',data)
     .then(response => {
       console.log(response.data);
       localStorage.setItem("verdict",JSON.stringify(response.data.data));
