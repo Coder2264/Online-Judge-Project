@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
 
 const refreshAccessToken= async()=>{
     try{
-        const res = await axiosInstance.post('/users/refreshToken');
+        const res = await axiosInstance.post('/users/refresh-token');
         console.log(res);
     }
     catch{
@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
     },
     async function (error) {
         const originalRequest = error.config;
-        if (error.response.status === 401 && originalRequest.url === 'http://localhost:3000/api/v1/users/refreshToken') {
+        if (error.response.status === 401 && originalRequest.url === '/users/refresh-token') {
             return Promise.reject(error);
         }
         if (error.response.status === 401 && !originalRequest._retry) {

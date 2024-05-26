@@ -1,10 +1,26 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../Axios';
 
 function VerdictPage(){
+
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      try {
+        const response = await axiosInstance.post("/users/isloggedin");
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+        navigate('/');
+      }
+    };
+    isLoggedIn();
+  }, []);
+
+
+
     let verdict=JSON.parse(localStorage.getItem("verdict"));
     return(
         <>

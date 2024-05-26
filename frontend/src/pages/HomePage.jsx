@@ -19,6 +19,7 @@ function HomePage() {
         console.log(response);
         setIsAdmin(response.data.data.isAdmin); // Use the setter function to update isAdmin
       } catch (error) {
+        console.log(error);
         navigate('/');
       }
     };

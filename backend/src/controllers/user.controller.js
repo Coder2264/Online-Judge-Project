@@ -10,7 +10,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
         const user = await User.findById(userId)
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
-
+        
         user.refreshToken = refreshToken
         await user.save({ validateBeforeSave: false })
 
@@ -96,6 +96,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     //const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
     user.password = undefined;
+    user.refreshToken = undefined;
     let { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
 
     const options = {
@@ -151,9 +152,11 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         )
+        console.log(decodedToken);
 
-        const user = await User.findById(decodedToken?._id)
 
+        const user = await User.findById(decodedToken?._id);
+        
         if (!user) {
             throw new ApiError(401, "Invalid refresh token")
         }
@@ -168,16 +171,17 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             // secure: true
         }
 
-        const { accessToken, newRefreshToken } = await generateAccessAndRefereshTokens(user._id)
+        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
+        
 
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", newRefreshToken, options)
+            .cookie("refreshToken", refreshToken, options)
             .json(
                 new ApiResponse(
                     200,
-                    { accessToken, refreshToken: newRefreshToken },
+                    { accessToken, refreshToken: refreshToken },
                     "Access token refreshed"
                 )
             )

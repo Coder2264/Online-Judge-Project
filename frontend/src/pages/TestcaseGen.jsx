@@ -7,6 +7,22 @@ import Footer from '../components/Footer';
 
 function TestcaseGen() {
 
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      try {
+        const response = await axiosInstance.post("/users/isloggedin");
+        console.log(response);
+        if (!response.data.data.isAdmin) {
+          navigate('/');
+        }
+      } catch (error) {
+        console.log(error);
+        navigate('/');
+      }
+    };
+    isLoggedIn();
+  }, []);
+
     const handleAddTestcase = () => {
         setData(prevData => {
           const newTestcases = [...prevData.testcases, { input: [""], output: [""] }];

@@ -1,6 +1,6 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../Axios';
 
@@ -19,6 +19,21 @@ function SubmitPage() {
   let problemName=JSON.parse(problem).name;
 
   const navigate=useNavigate();
+
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      try {
+        const response = await axiosInstance.post("/users/isloggedin");
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+        navigate('/');
+      }
+    };
+    isLoggedIn();
+  }, []);
+
+
   const submitSolution = async () => {
     data.problemId=JSON.parse(problem)._id;
     await axiosInstance.post('/submissions/submit/',data)

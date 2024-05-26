@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
       type: String,
       unique: true,
       trim: true,
-      required: true
+      required: true,
+      index: true
     },
     password: {
       type: String,
@@ -67,14 +68,14 @@ userSchema.methods.generateAccessToken =function(){
         handle: this.handle
       }, 
       process.env.ACCESS_TOKEN_SECRET,
-      {expiresIn: "1h"}
+      {expiresIn: "4h"}
     )
 }
 
 userSchema.methods.generateRefreshToken =function(){
     return jwt.sign(
       {
-        id: this._id,
+        _id: this._id,
       }, 
       process.env.REFRESH_TOKEN_SECRET,
       {expiresIn: "10d"}

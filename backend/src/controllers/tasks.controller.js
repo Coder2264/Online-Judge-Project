@@ -1,5 +1,6 @@
 import {ApiError} from "../utilities/ApiError.js";
 import {ApiResponse} from "../utilities/ApiResponse.js";
+import {asyncHandler} from "../utilities/asyncHandler.js";
 import {Task} from "../models/tasks.model.js";
 
 const createTask = async (req, res, next) => {
@@ -74,14 +75,10 @@ const getTask = async (req, res, next) => {
     }
 }
 
-const getAllTasks = async (req, res, next) => {
-    try {
+const getAllTasks =asyncHandler( async (req, res, next) => {
+    
         const tasks = await Task.find({});
         return res.status(200).json(new ApiResponse(200, tasks));
-    }
-    catch (error) {
-        next(new ApiError(400, error.message));
-    }
-}
+})
 
 export { createTask, updateTask, deleteTask, getTask, getAllTasks };

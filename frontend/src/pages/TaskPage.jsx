@@ -1,18 +1,36 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../Axios';
 
 function TaskPage() {
 
-  let task = localStorage.getItem("problem");
-  task = JSON.parse(task);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      try {
+        const response = await axiosInstance.post("/users/isloggedin");
+        console.log(response);
+        let task = localStorage.getItem("problem");
+        task = JSON.parse(task);
+      } catch (error) {
+        console.log(error);
+        navigate('/');
+      }
+    };
+    isLoggedIn();
+  }, []);
+
+  
+
+  
   const submitSolution = () => {
     navigate("/submit");
   }
+
+  
 
   return (
     <>
@@ -25,11 +43,7 @@ function TaskPage() {
           <h2 className="font-bold text-2xl mb-2">Format</h2>
           <div className="mb-4 p-4 bg-gray-100 rounded" style={{ whiteSpace: 'pre-wrap' }}>{task.format}</div>
           <h2 className="font-bold text-2xl mb-2">Constraints</h2>
-          <ul className="list-disc pl-5 mb-4">
-            {task.constraints.map((constraint, index) => (
-              <li key={index} className="mb-1">{constraint}</li>
-            ))}
-          </ul>
+          <div className="mb-4 p-4 bg-gray-100 rounded" style={{ whiteSpace: 'pre-wrap' }}>{task.constraints}</div>
           
           <h2 className="font-bold text-2xl mb-2">Test Cases</h2>
           <div>

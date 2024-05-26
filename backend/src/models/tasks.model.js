@@ -13,11 +13,11 @@ const taskSchema = new mongoose.Schema({
     },
     constraints: {
         type: [String],
-        default: []
+        required: [true, "Task constraints are required"],
     },
     format: {
         type: String,
-        default: []
+        required: [true, "Task format is required"],
     },
     testcases: {
         type: [Schema.Types.Mixed],
@@ -29,11 +29,11 @@ const taskSchema = new mongoose.Schema({
     },
     timeLimit: {
         type: String,
-        default: 1
+        default: "1s"
     },
     memoryLimit: {
         type: String,
-        default: 256
+        default: "256 MB"
     },
 }, {timestamps: true}
 )
