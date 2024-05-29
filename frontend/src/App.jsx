@@ -21,12 +21,12 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/task" element={<TaskPage/>}/>
+        <Route path="/task/:taskId" element={<TaskPage/>}/>
         <Route path="/verdict" element={<VerdictPage/>}/>
         <Route path="/submit" element={<SubmitPage/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/createTask" element={<CreateTask/>}/>
-        <Route path="/editTask" element={<UpdateTask/>}/>
+        <Route path="/editTask/:taskId" element={<UpdateTask/>}/>
         <Route path="/compiler" element={<Compiler/>}/>
         <Route path="/testcase" element={<TestcaseGen/>}/>
         <Route path="/testing" element={<JustAPage/>}/>

@@ -6,13 +6,11 @@ import axiosInstance from '../Axios';
 function ProblemCard({ problem, isAdmin }) {
   const navigate = useNavigate();
   const cardHandler = () => {
-    localStorage.setItem("problem", JSON.stringify(problem));
-    navigate("/task");
+    navigate(`/task/${problem._id}`);
   }
 
   const editHandler = () => {
-    localStorage.setItem("problem", JSON.stringify(problem));
-    navigate("/editTask");
+    navigate(`/editTask/${problem._id}`);
   }
 
   const deleteHandler = () => {

@@ -2,11 +2,23 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import axiosInstance from '../Axios';
 
 function TaskPage() {
 
   const navigate = useNavigate();
+
+  const [task, setTask] = React.useState({
+    name: '',
+    statement: '',
+    format: '',
+    constraints: '',
+    testcases: [],
+    timeLimit: '',
+    memoryLimit: '',
+    tag: []
+  });
 
   useEffect(() => {
     const isLoggedIn = async () => {
@@ -21,8 +33,19 @@ function TaskPage() {
     isLoggedIn();
   }, []);
 
-  let task = localStorage.getItem("problem");
-  task = JSON.parse(task);
+  useEffect(() => {
+    const fetchTask = async () => {
+      try {
+        const { data } = await axiosInstance.get(`/tasks/${window.location.pathname.split('/')[2]}`);
+        console.log(data.data);
+        setTask(data.data);
+      } catch (error) {
+        console.error('Error fetching task:', error);
+      }
+    };
+    fetchTask();
+  }, []);
+
 
   
   const submitSolution = () => {
@@ -69,7 +92,7 @@ function TaskPage() {
             Submit Solution!
           </button>
         </div>
-      </div>
+          </div>
       <Footer />
     </>
   )
