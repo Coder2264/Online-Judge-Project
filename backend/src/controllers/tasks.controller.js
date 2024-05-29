@@ -81,4 +81,15 @@ const getAllTasks =asyncHandler( async (req, res, next) => {
         return res.status(200).json(new ApiResponse(200, tasks));
 })
 
-export { createTask, updateTask, deleteTask, getTask, getAllTasks };
+const getTaskName = async (req, res, next) => {
+    try {
+        const task = await Task.findById(req.body.submission.taskId);
+        req.body.taskName = task.name;
+        res.status(200).json(new ApiResponse(200, req.body));
+    }
+    catch (error) {
+        next(new ApiError(400, error.message));
+    }
+}
+
+export { createTask, updateTask, deleteTask, getTask, getAllTasks, getTaskName };

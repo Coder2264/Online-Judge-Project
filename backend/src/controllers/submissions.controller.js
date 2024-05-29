@@ -36,10 +36,14 @@ const getSubmission = async (req, res, next) => {
     }
 }
 
-const getUserSubmissions = async (req, res, next) => {
+const getMostRecentSubmission = async (req, res, next) => {
     try {
-        const submissions = await Submission.find({ user: req.params.id });
-        return res.status(200).json(new ApiResponse(200, submissions));
+        const userId = req.user._id;
+        //console.log(userId);
+        const submissions = await Submission.find({ userId: userId }).sort({ submissionTime: -1 }).limit(1);
+        req.body.submission = submissions[0];
+        req.body.handle=req.user.handle;
+        next();
     } catch (error) {
         next(new ApiError(400, error.message));
     }
@@ -73,4 +77,4 @@ const EvaluateSubmission = async (req, res, next) => {
     }
 };
 
-export { createSubmission, getSubmissions, getSubmission, getUserSubmissions, EvaluateSubmission };
+export { createSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission };
