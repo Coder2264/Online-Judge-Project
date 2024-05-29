@@ -7,11 +7,11 @@ const testcaseSchema = new mongoose.Schema({
         required: true
     },
     input: {
-        type: [String],
+        type: String,
         required: true
     },
     output: {
-        type: [String],
+        type: String,
         required: true
     }
 }

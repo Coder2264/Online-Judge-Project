@@ -13,8 +13,6 @@ function TaskPage() {
       try {
         const response = await axiosInstance.post("/users/isloggedin");
         console.log(response);
-        let task = localStorage.getItem("problem");
-        task = JSON.parse(task);
       } catch (error) {
         console.log(error);
         navigate('/');
@@ -23,7 +21,8 @@ function TaskPage() {
     isLoggedIn();
   }, []);
 
-  
+  let task = localStorage.getItem("problem");
+  task = JSON.parse(task);
 
   
   const submitSolution = () => {

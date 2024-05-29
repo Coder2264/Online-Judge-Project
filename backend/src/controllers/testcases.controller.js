@@ -69,3 +69,18 @@ export const updateTestcase = async (req, res, next) => {
         return next(new ApiError(400, error.message));
     }
 }
+
+export const fetchTestcases = async (req, res, next) => {
+    //finds all testcases of one problem for submission
+    try {
+        const taskId = req.body.taskId|| req.body.problem_id;
+        if(taskId === undefined){
+            throw new ApiError(400, "Please provide a taskId");
+        }
+        const testcases = await Testcase.find({taskId: taskId});
+        req.body.testcases = testcases;
+        next();
+    } catch (error) {
+        return next(new ApiError(400, error.message));
+    }
+}

@@ -8,6 +8,8 @@ import SubmitPage from './pages/SubmitPage';
 import ProfilePage from './pages/ProfilePage';
 import CreateTask from './pages/CreateTask';
 import UpdateTask from './pages/UpdateTask';
+import Compiler from './pages/Compiler';
+import TestcaseGen from './pages/TestcaseGen';
 import JustAPage from './pages/TestingAndDebugging';
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/createTask" element={<CreateTask/>}/>
         <Route path="/editTask" element={<UpdateTask/>}/>
+        <Route path="/compiler" element={<Compiler/>}/>
+        <Route path="/testcase" element={<TestcaseGen/>}/>
         <Route path="/testing" element={<JustAPage/>}/>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>

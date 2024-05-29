@@ -2,9 +2,12 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import axiosInstance from '../Axios';
 
 function VerdictPage(){
+
+  const [verdict, setVerdict] = useState({});
 
   useEffect(() => {
     const isLoggedIn = async () => {
@@ -19,9 +22,22 @@ function VerdictPage(){
     isLoggedIn();
   }, []);
 
+  const navigate = useNavigate();
 
-
-    let verdict=JSON.parse(localStorage.getItem("verdict"));
+  // useEffect(() => {
+  //   const fetchVerdict = async () => {
+  //     try {
+  //       const { data } = await axiosInstance.get(`/submissions/recentSubmission`);
+  //       console.log(data.data);
+  //       setVerdict(data.data);
+  //     } catch (error) {
+  //       console.error('Error fetching verdict:', error);
+  //     }
+  //   };
+  //   fetchVerdict();
+  // }, []);
+  
+    
     return(
         <>
   <Navbar/>

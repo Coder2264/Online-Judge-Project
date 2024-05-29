@@ -7,6 +7,8 @@ import Footer from '../components/Footer';
 
 function TestcaseGen() {
 
+  const [data, setData] = useState({});
+
   useEffect(() => {
     const isLoggedIn = async () => {
       try {
@@ -22,6 +24,22 @@ function TestcaseGen() {
     };
     isLoggedIn();
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get(`/testcases?taskId=${taskId}`);
+        console.log(response);
+        setData(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
 
     const handleAddTestcase = () => {
         setData(prevData => {

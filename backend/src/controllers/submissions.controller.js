@@ -1,27 +1,20 @@
-import {ApiError} from "../utilities/ApiError.js";
-import {ApiResponse} from "../utilities/ApiResponse.js";
-import {Submission} from "../models/submissions.model.js";
+import { ApiError } from "../utilities/ApiError.js";
+import { ApiResponse } from "../utilities/ApiResponse.js";
+import { Submission } from "../models/submissions.model.js";
 
-const createSubmission = async (req, res, next) => {
+const createSubmission = async (data) => {
     try {
-        let user=req.user;
-        if(!user.isAdmin){
-            throw new ApiError(403, "You are not authorized to submit the code");
-        }
-        const {userId, taskId, code, language, verdict, execTime, memory, submissionTime } = req.body;
-        const submission = await Submission.create({
-            userId,
-            taskId,
-            code,
-            language,
-            verdict,
-            execTime,
-            memory,
-            submissionTime
-        });
-        return res.status(201).json(new ApiResponse(201, submission));
+        const submissionData = {
+            userId: data.user._id,
+            language: data.language,
+            code: data.code,
+            verdict: data.status,
+            taskId: data.taskId
+        };
+        const submission = await Submission.create(submissionData);
+        console.log(submission);
     } catch (error) {
-        next(new ApiError(400, error.message));
+        throw new ApiError(400, error.message);
     }
 }
 
@@ -45,7 +38,7 @@ const getSubmission = async (req, res, next) => {
 
 const getUserSubmissions = async (req, res, next) => {
     try {
-        const submissions = await Submission.find({user: req.params.id});
+        const submissions = await Submission.find({ user: req.params.id });
         return res.status(200).json(new ApiResponse(200, submissions));
     } catch (error) {
         next(new ApiError(400, error.message));
@@ -54,23 +47,30 @@ const getUserSubmissions = async (req, res, next) => {
 
 const EvaluateSubmission = async (req, res, next) => {
     try {
-        //console.log(req);
-        let data={
-            sourceCode:"int main(){\n    int a,b;\n    scanf(\"%d %d\",&a,&b);\n    printf(\"%d\",a+b);\n    return 0;\n}",
-            status:"AC",
-            time:"0.1s",
-            memory:"64MB",
-            message:"Accepted",
-            submissionTime: "2021-09-01T12:00:00Z",
-            language:"C",
-            User:"Tourist",
-            problemName:"A+B"
+        const expectedOutputs = req.body.testcases.map(testcase => testcase.output);
+        const outputs = req.body.outputs;
+        let submissionData = {
+            user: req.user,
+            language: req.body.language,
+            code: req.body.code,
+            taskId: req.body.taskId || req.body.problem_id
         };
 
-        return res.status(200).json(new ApiResponse(200, data ,"Submission evaluated successfully"));
-    } catch (error) {
+        for (let i = 0; i < expectedOutputs.length; i++) {
+            if (outputs[i] !== expectedOutputs[i]) {
+                submissionData.status = `Wrong Answer on testcase ${i + 1}`;
+                await createSubmission(submissionData);
+                return res.status(200).json(new ApiResponse(200, { status: "Wrong Answer", testcase: i + 1 }));
+            }
+        }
+
+        submissionData.status = "Accepted";
+        await createSubmission(submissionData);
+        return res.status(200).json(new ApiResponse(200, { status: "Accepted" }));
+    }
+    catch (error) {
         next(new ApiError(400, error.message));
     }
-}
+};
 
-export {createSubmission, getSubmissions, getSubmission, getUserSubmissions, EvaluateSubmission};
+export { createSubmission, getSubmissions, getSubmission, getUserSubmissions, EvaluateSubmission };

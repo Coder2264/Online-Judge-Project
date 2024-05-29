@@ -23,14 +23,6 @@ const submissionSchema = new mongoose.Schema({
         type: String,
         default: "PENDING"
     },
-    execTime: {
-        type: Number,
-        default: 0
-    },
-    memory: {
-        type: Number,
-        default: 0
-    },
     submissionTime: {
         type: Date,
         default: Date.now

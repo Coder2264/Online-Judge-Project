@@ -6,7 +6,6 @@ import axiosInstance from "../Axios";
 
 function ProfilePage() {
 
-    let handle = localStorage.getItem('handle');
     const navigate = useNavigate();
 
     const [data, setData] = useState({
@@ -19,16 +18,27 @@ function ProfilePage() {
     });
 
     useEffect(() => {
-        const isLoggedIn = async () => {
+        const fetchUser = async () => {
           try {
-            const response = await axiosInstance.post("/users/isloggedin");
-            console.log(response);
+            const response = await axiosInstance.get("/users/current-user");
+            const userData=response.data.data;
+            console.log(userData);
+            if(userData){
+                setData({
+                    fullName: userData.fullName,
+                    email: userData.email,
+                    dob: userData.dob,
+                    problemsSolved: userData.problemsSolved,
+                    problemsAttempted: userData.problemsAttempted,
+                    userType: userData.isAdmin?"Admin":"User"
+                });
+            }
           } catch (error) {
             console.log(error);
-            navigate('/');
+            
           }
         };
-        isLoggedIn();
+        fetchUser();
       }, []);
 
     const handleImageUpload = (event) => {
