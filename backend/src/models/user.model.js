@@ -30,17 +30,13 @@ const userSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    problemsSolved: {
-        type: Number,
-        default: 0
-    },
-    problemsAttempted: {
-        type: Number,
-        default: 0
-    },
     isAdmin: {
         type: Boolean,
         default: false
+    },
+    photo: {
+        type: String,
+        default: null
     },
     refreshToken: {
         type: String,

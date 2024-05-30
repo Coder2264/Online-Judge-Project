@@ -1,6 +1,9 @@
 import { ApiError } from "../utilities/ApiError.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { Submission } from "../models/submissions.model.js";
+import { asyncHandler } from "../utilities/asyncHandler.js";
+import mongoose from "mongoose";
+const ObjectId = mongoose.Types.ObjectId;
 
 const createSubmission = async (data) => {
     try {
@@ -42,7 +45,7 @@ const getMostRecentSubmission = async (req, res, next) => {
         //console.log(userId);
         const submissions = await Submission.find({ userId: userId }).sort({ submissionTime: -1 }).limit(1);
         req.body.submission = submissions[0];
-        req.body.handle=req.user.handle;
+        req.body.handle = req.user.handle;
         next();
     } catch (error) {
         next(new ApiError(400, error.message));
@@ -77,4 +80,23 @@ const EvaluateSubmission = async (req, res, next) => {
     }
 };
 
-export { createSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission };
+const getUserStats = asyncHandler(async (req, res) => {
+
+    let profile = JSON.parse(JSON.stringify(req.user));
+    profile.problemsSolved = await Submission.countDocuments({ userId: req.user._id, verdict: "Accepted" });
+
+    const submissions = await Submission.find({ userId: req.user._id });
+    const uniqueProblemIds = [...new Set(submissions.map(submission => String(submission.problemId)))];
+    profile.problemsAttempted = uniqueProblemIds.length;
+
+    //console.log(profile);
+    return res
+        .status(200)
+        .json(new ApiResponse(
+            200,
+            profile,
+            "Profile data fetched successfully"
+        ))
+})
+
+export { createSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission, getUserStats };

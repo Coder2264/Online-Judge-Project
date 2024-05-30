@@ -1,7 +1,9 @@
 import {Router} from 'express';
 const router= Router();
 import { verifyJWT} from '../middlewares/authorization.js';
-import {registerUser, loginUser,logoutUser, refreshAccessToken, getCurrentUser, getUserType} from '../controllers/user.controller.js'
+import {registerUser, loginUser,logoutUser, refreshAccessToken, getCurrentUser, getUserType, uploadProfilePhoto} from '../controllers/user.controller.js'
+import {getUserStats} from '../controllers/submissions.controller.js'
+import { upload } from '../utilities/cloudinary.js';
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
@@ -14,7 +16,8 @@ router.route("/current-user").get(verifyJWT, getCurrentUser)
 //router.route("/reset-password").post(resetUserPassword)
 //router.route("/reset-password-change/:id/:token").post(resetUserPasswordChange)
 router.route("/isloggedin").post(verifyJWT,getUserType)
-
+router.route("/getProfile").get(verifyJWT,getUserStats)
+router.route("/update-image").put(verifyJWT,upload.single('image'),uploadProfilePhoto)
 
 
 export default router;

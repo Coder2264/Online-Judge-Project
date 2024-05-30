@@ -212,6 +212,30 @@ const getUserType = asyncHandler(async (req, res) => {
         ))
 })
 
+const uploadProfilePhoto = asyncHandler(async (req, res) => {
+    if(req.file){
+        const imageUrl = req.file.path;
+        const userId= req.user._id;
+
+        // Fetch the user
+        const user = await User.findById(userId);
+
+        // Update the photo field
+        user.photo = imageUrl;
+
+        // Save the user
+        await user.save();
+
+        res.json(new ApiResponse(
+            200,
+            {imageUrl},
+            "Profile photo uploaded successfully"
+        ));
+    } else {
+        throw new ApiError(400, "Please upload a file")
+    }
+})
+
 
 export {
     registerUser,
@@ -219,5 +243,6 @@ export {
     logoutUser,
     refreshAccessToken,
     getCurrentUser,
-    getUserType
+    getUserType,
+    uploadProfilePhoto
 }

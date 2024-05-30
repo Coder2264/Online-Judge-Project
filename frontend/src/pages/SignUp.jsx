@@ -4,7 +4,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import axiosInstance from "../Axios";
 
-
 function SignUp(){
 
     const [data,setData]=useState({
@@ -20,7 +19,6 @@ function SignUp(){
 
     const registerUser = async (e) => {
         e.preventDefault();
-        //console.log(data);
         
         if(data.password!==data.confirmPassword){
             alert("Passwords do not match");
@@ -51,7 +49,7 @@ function SignUp(){
     return (
         <>
     <ToastContainer />
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 sm:w-3/4 md:w-1/2 lg:w-1/3">
         <h1 className="text-4xl font-bold mb-4">Sign Up</h1>
         <form onSubmit={registerUser} className="space-y-4">
         <input
@@ -98,6 +96,7 @@ function SignUp(){
         />
         <button type="submit" className="w-full px-4 py-2 bg-blue-500 text-white rounded">Sign Up</button>
         </form>
+        <button type="button" onClick={() => navigate("/")} className="w-full px-4 py-2 bg-red-500 text-white rounded mt-4">Log In</button>
     </div>
 </>    
     );
