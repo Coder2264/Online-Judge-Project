@@ -99,4 +99,65 @@ const getUserStats = asyncHandler(async (req, res) => {
         ))
 })
 
-export { createSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission, getUserStats };
+const getHeatMapData = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    const endDate = new Date(); // Today, 30 May 2024
+    const startDate = new Date();
+    startDate.setFullYear(endDate.getFullYear() - 1);
+    startDate.setDate(endDate.getDate() + 1); // 31 May 2023
+    const submissionsPerDay = await Submission.aggregate([
+        {
+            $match: {
+                userId: userId,
+                submissionTime: {
+                    $gte: startDate,
+                    $lt: endDate
+                }
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    year: { $year: "$submissionTime" },
+                    month: { $month: "$submissionTime" },
+                    day: { $dayOfMonth: "$submissionTime" }
+                },
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                date: {
+                    $dateFromParts: {
+                        year: '$_id.year',
+                        month: '$_id.month',
+                        day: '$_id.day'
+                    }
+                },
+                count: {
+                    $min: {
+                        $cond: [
+                            { $gt: ['$count', 4] },
+                            4,
+                            '$count'
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            $sort: { date: 1 }
+        }
+    ]);
+
+    return res
+        .status(200)
+        .json(new ApiResponse(
+            200,
+            submissionsPerDay,
+            "Heatmap data fetched successfully"
+        ))
+})
+
+export { createSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission, getUserStats, getHeatMapData };
