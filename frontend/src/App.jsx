@@ -28,7 +28,7 @@ function App() {
         <Route path="/createTask" element={<CreateTask/>}/>
         <Route path="/editTask/:taskId" element={<UpdateTask/>}/>
         <Route path="/compiler" element={<Compiler/>}/>
-        <Route path="/testcase" element={<TestcaseGen/>}/>
+        <Route path="/testcases/:taskId" element={<TestcaseGen/>}/>
         <Route path="/testing" element={<JustAPage/>}/>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>

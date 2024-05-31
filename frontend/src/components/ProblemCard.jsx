@@ -13,6 +13,10 @@ function ProblemCard({ problem, isAdmin }) {
     navigate(`/editTask/${problem._id}`);
   }
 
+  const editTestcasesHandler = () => {
+    navigate(`/testcases/${problem._id}`);
+  }
+
   const deleteHandler = () => {
     console.log(problem._id);
     axiosInstance.delete(`/tasks/${problem._id}`)
@@ -37,12 +41,20 @@ function ProblemCard({ problem, isAdmin }) {
       </div>
       <div className="flex">
         {isAdmin && (
+          <>
           <button
-            className="bg-purple-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" // Added margin-right
+            className="bg-purple-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
             onClick={editHandler}
           >
             Edit
           </button>
+          <button
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+            onClick={editTestcasesHandler}
+          >
+            Edit Testcases
+          </button>
+        </>
         )}
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(event) => cardHandler()}>
           Solve

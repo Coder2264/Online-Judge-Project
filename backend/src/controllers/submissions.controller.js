@@ -83,7 +83,8 @@ const EvaluateSubmission = async (req, res, next) => {
 const getUserStats = asyncHandler(async (req, res) => {
 
     let profile = JSON.parse(JSON.stringify(req.user));
-    profile.problemsSolved = await Submission.countDocuments({ userId: req.user._id, verdict: "Accepted" });
+    const uniqueProblemsSolved = await Submission.distinct('taskId', { userId: req.user._id, verdict: "Accepted" });
+    profile.problemsSolved = uniqueProblemsSolved.length;
 
     const submissions = await Submission.find({ userId: req.user._id });
     const uniqueProblemIds = [...new Set(submissions.map(submission => String(submission.problemId)))];

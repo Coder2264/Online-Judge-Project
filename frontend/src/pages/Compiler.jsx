@@ -1,9 +1,4 @@
 import React, { useState } from 'react';
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism-tomorrow.css';
 import axiosInstance from '../Axios';
 import Navbar from '../components/Navbar';
 
@@ -30,7 +25,7 @@ function Compiler() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
-        
+      <Navbar />
       <h1 className="text-4xl font-bold mb-8 text-gray-800">Online Code Compiler</h1>
       <div className="container mx-auto flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 px-4">
         <div className="flex-1">
@@ -38,25 +33,20 @@ function Compiler() {
             <h2 className="text-2xl font-semibold mb-4">Editor</h2>
             <div className="mb-4">
               <label className="mr-2">Language:</label>
-              <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+              <select value={language} onChange={(e) => setLanguage(e.target.value)} className="border border-gray-300 rounded-md p-2">
                 <option value="c">C</option>
                 <option value="cpp">C++</option>
                 <option value="java">Java</option>
                 <option value="python">Python</option>
               </select>
             </div>
-            <div className="bg-gray-800 text-white rounded-md p-4 mb-4" style={{ height: '300px', overflowY: 'auto' }}>
-              <Editor
+            <div className="mb-4">
+              <textarea
                 value={code}
-                onValueChange={setCode}
-                highlight={code => highlight(code, languages.js)}
-                padding={10}
-                style={{
-                  fontFamily: '"Fira code", "Fira Mono", monospace',
-                  fontSize: 14,
-                  height: '100%',
-                  overflowY: 'auto'
-                }}
+                onChange={(e) => setCode(e.target.value)}
+                className="w-full h-64 border border-gray-300 rounded-md p-2 font-mono text-sm"
+                placeholder="Write your code here..."
+                style={{ minHeight: '50vh' }}
               />
             </div>
             <button

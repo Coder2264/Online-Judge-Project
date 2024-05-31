@@ -4,6 +4,7 @@ import { ApiResponse } from "../utilities/ApiResponse.js";
 import { asyncHandler } from "../utilities/asyncHandler.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import {v2 as cloudinary} from "cloudinary"
 
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
@@ -219,6 +220,14 @@ const uploadProfilePhoto = asyncHandler(async (req, res) => {
 
         // Fetch the user
         const user = await User.findById(userId);
+
+        // If user already has a photo, delete it from Cloudinary
+        if (user.photo) {
+            let publicId = user.photo.split('/').pop().split('.')[0];
+            publicId= 'onlineJudge/'+publicId;
+            console.log(publicId);
+            await cloudinary.uploader.destroy(publicId);
+        }
 
         // Update the photo field
         user.photo = imageUrl;
