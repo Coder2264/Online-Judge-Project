@@ -21,10 +21,13 @@ const createSubmission = async (data) => {
     }
 }
 
+
 const getSubmissions = async (req, res, next) => {
     try {
-        const submissions = await Submission.find();
-        return res.status(200).json(new ApiResponse(200, submissions));
+        const _id = req.user._id;
+        const submissions = await Submission.find({userId: _id});
+        req.body.submissions = submissions;
+        next();
     } catch (error) {
         next(new ApiError(400, error.message));
     }
@@ -32,12 +35,22 @@ const getSubmissions = async (req, res, next) => {
 
 const getSubmission = async (req, res, next) => {
     try {
-        const submission = await Submission.findById(req.params.id);
-        return res.status(200).json(new ApiResponse(200, submission));
+        const submissionId = req.body.id;
+        if (!ObjectId.isValid(submissionId)) {
+            throw new ApiError(400, "Invalid submission ID");
+        }
+        const submission = await Submission.findById(submissionId);
+        if (!submission) {
+            throw new ApiError(404, "Submission not found");
+        }
+        req.body.submission = submission;
+        req.body.handle = req.user.handle;
+        next();
     } catch (error) {
         next(new ApiError(400, error.message));
     }
 }
+
 
 const getMostRecentSubmission = async (req, res, next) => {
     try {
@@ -86,9 +99,9 @@ const getUserStats = asyncHandler(async (req, res) => {
     const uniqueProblemsSolved = await Submission.distinct('taskId', { userId: req.user._id, verdict: "Accepted" });
     profile.problemsSolved = uniqueProblemsSolved.length;
 
-    const submissions = await Submission.find({ userId: req.user._id });
-    const uniqueProblemIds = [...new Set(submissions.map(submission => String(submission.problemId)))];
-    profile.problemsAttempted = uniqueProblemIds.length;
+    const submissions = await Submission.distinct('taskId',{ userId: req.user._id });
+    
+    profile.problemsAttempted = submissions.length;
 
     //console.log(profile);
     return res

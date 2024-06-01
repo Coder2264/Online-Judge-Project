@@ -24,8 +24,10 @@ function Compiler() {
   }
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
-      <Navbar />
+      
       <h1 className="text-4xl font-bold mb-8 text-gray-800">Online Code Compiler</h1>
       <div className="container mx-auto flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 px-4">
         <div className="flex-1">
@@ -75,6 +77,7 @@ function Compiler() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

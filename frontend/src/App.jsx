@@ -10,7 +10,13 @@ import CreateTask from './pages/CreateTask';
 import UpdateTask from './pages/UpdateTask';
 import Compiler from './pages/Compiler';
 import TestcaseGen from './pages/TestcaseGen';
-import JustAPage from './pages/TestingAndDebugging';
+import SubmissionsPage from './pages/Submissions';
+import PastVerdictPage from './pages/PastVerdict';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+
 
 function App() {
   
@@ -29,7 +35,12 @@ function App() {
         <Route path="/editTask/:taskId" element={<UpdateTask/>}/>
         <Route path="/compiler" element={<Compiler/>}/>
         <Route path="/testcases/:taskId" element={<TestcaseGen/>}/>
-        <Route path="/testing" element={<JustAPage/>}/>
+        <Route path="/mysubmissions" element={<SubmissionsPage/>} />
+        <Route path="/pastSubmissions/:submissionId" element={<PastVerdictPage/>}/>
+        <Route path="/about" element={<AboutUs/>}/>
+        <Route path="/contact" element={<ContactUs/>}/>
+        <Route path="/privacy" element={<PrivacyPolicy/>}/>
+        <Route path="/terms" element={<TermsOfService/>}/>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
       </BrowserRouter>

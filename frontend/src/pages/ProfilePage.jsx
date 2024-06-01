@@ -52,7 +52,7 @@ function ProfilePage() {
     useEffect(() => {
         const fetchHeatmapData = async () => {
             const res = await axiosInstance.get("/submissions/heatmap");
-            // console.log(res.data.data);
+            //console.log(res.data.data);
             setHeatmapData(res.data.data);
         };
         fetchHeatmapData();
@@ -110,6 +110,7 @@ function ProfilePage() {
                     <div className="text-lg md:text-xl mb-2">
                         User Type: {data.userType}
                     </div>
+                    <button onClick={()=>{navigate('/mysubmissions')}} className="mt-2 w-full px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">My Submissions</button>
                     <div className="mt-4">
 
 

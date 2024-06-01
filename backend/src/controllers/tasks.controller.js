@@ -1,11 +1,11 @@
-import {ApiError} from "../utilities/ApiError.js";
-import {ApiResponse} from "../utilities/ApiResponse.js";
-import {asyncHandler} from "../utilities/asyncHandler.js";
-import {Task} from "../models/tasks.model.js";
+import { ApiError } from "../utilities/ApiError.js";
+import { ApiResponse } from "../utilities/ApiResponse.js";
+import { asyncHandler } from "../utilities/asyncHandler.js";
+import { Task } from "../models/tasks.model.js";
 
 const createTask = async (req, res, next) => {
     try {
-        if(!req.user.isAdmin){
+        if (!req.user.isAdmin) {
             throw new ApiError(403, "You are not authorized to add tasks");
         }
         const { name, statement, constraints, format, testcases, tag, timeLimit, memoryLimit } = req.body;
@@ -27,11 +27,11 @@ const createTask = async (req, res, next) => {
 
 const updateTask = async (req, res, next) => {
     try {
-        if(!req.user.isAdmin){
+        if (!req.user.isAdmin) {
             throw new ApiError(403, "You are not authorized to update tasks");
         }
-        const {_id }= req.params;
-        const {name, statement, constraints, format, testcases, tag, memoryLimit, timeLimit } = req.body;
+        const { _id } = req.params;
+        const { name, statement, constraints, format, testcases, tag, memoryLimit, timeLimit } = req.body;
         const task = await Task.findByIdAndUpdate(_id, {
             name,
             statement,
@@ -43,7 +43,7 @@ const updateTask = async (req, res, next) => {
             timeLimit
         });
         const updatedTask = await Task.findById(_id);
-        return res.status(200).json(new ApiResponse(200,updatedTask));
+        return res.status(200).json(new ApiResponse(200, updatedTask));
     }
     catch (error) {
         next(new ApiError(400, error.message));
@@ -52,7 +52,7 @@ const updateTask = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
     try {
-        if(!req.user.isAdmin){
+        if (!req.user.isAdmin) {
             throw new ApiError(403, "You are not authorized to delete tasks");
         }
         const { _id } = req.params;
@@ -75,10 +75,10 @@ const getTask = async (req, res, next) => {
     }
 }
 
-const getAllTasks =asyncHandler( async (req, res, next) => {
-    
-        const tasks = await Task.find({});
-        return res.status(200).json(new ApiResponse(200, tasks));
+const getAllTasks = asyncHandler(async (req, res, next) => {
+
+    const tasks = await Task.find({});
+    return res.status(200).json(new ApiResponse(200, tasks));
 })
 
 const getTaskName = async (req, res, next) => {
@@ -92,4 +92,21 @@ const getTaskName = async (req, res, next) => {
     }
 }
 
-export { createTask, updateTask, deleteTask, getTask, getAllTasks, getTaskName };
+const getTasksName = async (req, res, next) => {
+    try {
+        const submissions = req.body.submissions;
+        for (let i = 0; i < submissions.length; i++) {
+            const task = await Task.findById(submissions[i].taskId);
+            submissions[i] = submissions[i].toObject();
+            submissions[i].taskName = task.name;
+        }
+        req.body.submissions = submissions;
+        res.status(200).json(new ApiResponse(200, req.body));
+    }
+    catch (error) {
+        next(new ApiError(400, error.message));
+    }
+}
+
+
+export { createTask, updateTask, deleteTask, getTask, getAllTasks, getTaskName, getTasksName };
