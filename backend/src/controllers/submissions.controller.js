@@ -21,6 +21,16 @@ const createSubmission = async (data) => {
     }
 }
 
+const deleteSubmission = async (req, res, next) => {
+    try {
+        const taskId = req.query.taskId;
+        await Submission.deleteMany({ taskId: taskId });
+        res.status(200).json({ message: 'Submission(s) deleted successfully.' });
+    } catch (error) {
+        next(new ApiError(400, error.message));
+    }
+}
+
 
 const getSubmissions = async (req, res, next) => {
     try {
@@ -174,4 +184,4 @@ const getHeatMapData = asyncHandler(async (req, res) => {
         ))
 })
 
-export { createSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission, getUserStats, getHeatMapData };
+export { createSubmission,deleteSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission, getUserStats, getHeatMapData };

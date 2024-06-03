@@ -33,7 +33,6 @@ function SignUp(){
                 navigate("/");
             })
             .catch((error) => {
-                console.log(error);
                 const htmlResponse = error.response.data.message;
                 console.log('Extracted message:', htmlResponse);
                 toast.error(htmlResponse, { autoClose: 2000 });

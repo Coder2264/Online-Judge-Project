@@ -4,14 +4,15 @@ import { ApiResponse } from "../utilities/ApiResponse.js";
 import { asyncHandler } from "../utilities/asyncHandler.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import {v2 as cloudinary} from "cloudinary"
+import { v2 as cloudinary } from "cloudinary"
+import nodemailer from "nodemailer";
 
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
         const user = await User.findById(userId)
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
-        
+
         user.refreshToken = refreshToken
         await user.save({ validateBeforeSave: false })
 
@@ -156,7 +157,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 
         const user = await User.findById(decodedToken?._id);
-        
+
         if (!user) {
             throw new ApiError(401, "Invalid refresh token")
         }
@@ -172,7 +173,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         }
 
         const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
-        
+
 
         return res
             .status(200)
@@ -214,9 +215,9 @@ const getUserType = asyncHandler(async (req, res) => {
 })
 
 const uploadProfilePhoto = asyncHandler(async (req, res) => {
-    if(req.file){
+    if (req.file) {
         const imageUrl = req.file.path;
-        const userId= req.user._id;
+        const userId = req.user._id;
 
         // Fetch the user
         const user = await User.findById(userId);
@@ -224,7 +225,7 @@ const uploadProfilePhoto = asyncHandler(async (req, res) => {
         // If user already has a photo, delete it from Cloudinary
         if (user.photo) {
             let publicId = user.photo.split('/').pop().split('.')[0];
-            publicId= 'onlineJudge/'+publicId;
+            publicId = 'onlineJudge/' + publicId;
             console.log(publicId);
             await cloudinary.uploader.destroy(publicId);
         }
@@ -237,7 +238,7 @@ const uploadProfilePhoto = asyncHandler(async (req, res) => {
 
         res.json(new ApiResponse(
             200,
-            {imageUrl},
+            { imageUrl },
             "Profile photo uploaded successfully"
         ));
     } else {
@@ -245,6 +246,92 @@ const uploadProfilePhoto = asyncHandler(async (req, res) => {
     }
 })
 
+const sendMail = asyncHandler(async (data) => {
+    const { email, subject, text } = data;
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD,
+        },
+    });
+
+    const mailOptions = {
+        from: '"AlgoForcesTeam@noreply.com" <' + process.env.EMAIL + '>',
+        to: email,
+        subject: subject,
+        text: text
+    }
+
+    transporter.sendMail(mailOptions, function (error, info) {  //using callback rather than promise for handling asynchronous code
+        if (error) {
+            console.log(error);
+            throw new ApiError(500, "Error sending email");
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).json(new ApiResponse(200, {}, "Email sent successfully"));
+        }
+    });
+})
+
+const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        throw new ApiError(400, "Please provide an email address")
+    }
+
+    const user = await User.findOne({
+        email
+    });
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const resetToken = user.getResetPasswordToken();
+    user.resetPasswordToken = resetToken;
+    user.save({ validateBeforeSave: false });
+
+    const toVisit = `http://localhost:5173/reset-password/${user._id}/${resetToken}`;
+    sendMail({ email, subject: "Password Reset", text: `Click on the link to reset your password: ${toVisit}` });
+    res.json("Password reset link sent to your email");
+});
+
+const resetPassword = async (req, res, next) => {
+    try {
+        const { password } = req.body;
+        const { userId, token } = req.params;
+
+        if (!password) {
+            throw new ApiError(400, "Please provide a password")
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        const decodedToken = jwt.verify(token, process.env.RESET_PASSWORD_TOKEN_SECRET);
+        if(decodedToken.id !== userId) {
+            throw new ApiError(400, "Invalid token");
+        }
+        if (token !== user.resetPasswordToken) {
+            throw new ApiError(400, "Invalid token");
+        }
+
+        user.password = password;
+        user.resetPasswordToken = "";
+        user.save();
+
+        res.status(200).json(new ApiResponse(200, {}, "Password reset successfully"));
+    }
+    catch (error) {
+        next(new ApiError(400, error.message));
+    }
+};
 
 export {
     registerUser,
@@ -253,5 +340,7 @@ export {
     refreshAccessToken,
     getCurrentUser,
     getUserType,
-    uploadProfilePhoto
+    uploadProfilePhoto,
+    forgotPassword,
+    resetPassword
 }

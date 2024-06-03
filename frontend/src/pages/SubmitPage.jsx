@@ -52,9 +52,7 @@ function ProblemSubmission() {
         navigate('/verdict');
       }, 2000);
     } catch (error) {
-      const htmlResponse = error.response.data;
-      const preContent = String(htmlResponse.match(/<pre>(.*?)<\/pre>/s)[1]);
-      const extractedMessage = preContent.split('<br>')[0].trim();
+      const extractedMessage = error.response.data.message;
       toast.error(extractedMessage, { autoClose: 2000 });
     }
   };

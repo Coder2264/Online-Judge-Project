@@ -25,12 +25,12 @@ app.use('/api/v1/tasks', taskRouter);
 app.use('/api/v1/submissions', submissionRouter);
 app.use('/api/v1/testcases', testcaseRouter);
 
-// app.use((err, req, res, next) => {
-//     res.status(err.status || 500).json({
-//         success: false,
-//         message: err.message,
-//     });
-// });
+app.use((err, req, res, next) => {
+    res.status(err.status || 500).json({
+        success: false,
+        message: err.message,
+    });
+});
 
 
 

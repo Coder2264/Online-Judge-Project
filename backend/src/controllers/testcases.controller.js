@@ -49,7 +49,7 @@ export const deleteAllTestcases = async (req, res, next) => {
         }
         const taskId = req.query.taskId;
         const testcases = await Testcase.deleteMany({ taskId: taskId });
-        return res.status(200).json(new ApiResponse(200, testcases, "All testcases deleted successfully"));
+        next();
     } catch (error) {
         return next(new ApiError(400, error.message));
     }

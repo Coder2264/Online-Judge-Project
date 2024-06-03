@@ -57,7 +57,7 @@ const deleteTask = async (req, res, next) => {
         }
         const { _id } = req.params;
         const task = await Task.findByIdAndDelete(_id);
-        return res.status(200).json(new ApiResponse(200, task));
+        next();
     }
     catch (error) {
         next(new ApiError(400, error.message));

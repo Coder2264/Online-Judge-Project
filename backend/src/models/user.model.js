@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
     refreshToken: {
         type: String,
         default: ""
+    },
+    resetPasswordToken: {
+      type: String,
+      default: ""
     }
   });
   
@@ -78,5 +82,12 @@ userSchema.methods.generateRefreshToken =function(){
     )
 }
 
+userSchema.methods.getResetPasswordToken = function(){
+  return jwt.sign(
+    {id: this._id},
+    process.env.RESET_PASSWORD_TOKEN_SECRET,
+    {expiresIn: "5m"}
+  )
+}
 
 export const User = mongoose.model("User", userSchema)

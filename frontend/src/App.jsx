@@ -12,6 +12,8 @@ import Compiler from './pages/Compiler';
 import TestcaseGen from './pages/TestcaseGen';
 import SubmissionsPage from './pages/Submissions';
 import PastVerdictPage from './pages/PastVerdict';
+import ForgotPassword from './pages/ForgotPassword1';
+import SetNewPassword from './pages/SetNewPassword';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -37,6 +39,8 @@ function App() {
         <Route path="/testcases/:taskId" element={<TestcaseGen/>}/>
         <Route path="/mysubmissions" element={<SubmissionsPage/>} />
         <Route path="/pastSubmissions/:submissionId" element={<PastVerdictPage/>}/>
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/reset-password/:userId/:token" element={<SetNewPassword/>}/>
         <Route path="/about" element={<AboutUs/>}/>
         <Route path="/contact" element={<ContactUs/>}/>
         <Route path="/privacy" element={<PrivacyPolicy/>}/>
