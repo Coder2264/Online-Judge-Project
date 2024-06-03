@@ -25,6 +25,18 @@ function ProfilePage() {
     });
 
     useEffect(() => {
+        const isLoggedIn = async () => {
+          try {
+            const response = await axiosInstance.post("/users/isloggedin");
+          } catch (error) {
+            console.log(error);
+            navigate('/');
+          }
+        };
+        isLoggedIn();
+    }, []);
+
+    useEffect(() => {
         const fetchUser = async () => {
             try {
                 const response = await axiosInstance.get("/users/getProfile");

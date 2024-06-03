@@ -13,6 +13,18 @@ function SubmissionsPage(){
     const navigate = useNavigate();
 
     useEffect(() => {
+        const isLoggedIn = async () => {
+          try {
+            const response = await axiosInstance.post("/users/isloggedin");
+          } catch (error) {
+            console.log(error);
+            navigate('/');
+          }
+        };
+        isLoggedIn();
+    }, []);
+
+    useEffect(() => {
         axiosInstance.get('/submissions/')
           .then(response => {
             setSubmissions(response.data.data.submissions);
