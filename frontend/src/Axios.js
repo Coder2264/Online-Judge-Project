@@ -1,7 +1,5 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config();
-const port=process.env.BACKEND_PORT;
+const port = import.meta.env.VITE_BACKEND_PORT||3000;
 
 const axiosInstance = axios.create({
     baseURL: `http://localhost:${port}/api/v1`,

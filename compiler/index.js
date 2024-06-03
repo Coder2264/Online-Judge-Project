@@ -67,6 +67,57 @@ app.post('/run', async (req, res) => {
     }
 });
 
+app.post('/runOntest', async (req, res) => {
+    const { language, code, testcases } = req.body;
+
+  const filePath = await generateFile(language, code);
+  let outputs = [];
+
+  try {
+    for (let testcase of testcases) {
+      const inputPath = await generateInputFile(testcase.input);
+      let output;
+
+      switch (language) {
+        case 'c':
+          output = await executeC(filePath, inputPath);
+          break;
+        case 'java':
+          output = await executeJava(filePath, inputPath);
+          break;
+        case 'python':
+          output = await executePython(filePath, inputPath);
+          break;
+        default:
+          output = await executeCpp(filePath, inputPath);
+          break;
+      }
+
+      // If the output contains an error message, send it as a response
+      if (output.includes('Error')) {
+        return res.status(400).json(new ApiError(400, {error: output}, "Compilation Error"));
+      }
+
+      outputs.push(output.trim());
+
+      // Delete the input file after it's processed
+      await unlinkAsync(inputPath);
+    }
+
+    res.json({ outputs });
+  } catch (error) {
+    // If an error occurs, send it as a response
+    return res.status(500).json({ error: error.message });
+  } finally {
+    // Ensure the code file is deleted after processing
+    try {
+      await unlinkAsync(filePath);
+    } catch (cleanupError) {
+      console.error('Error deleting file:', cleanupError);
+    }
+  }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
