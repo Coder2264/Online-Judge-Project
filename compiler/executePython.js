@@ -14,13 +14,18 @@ if (!fs.existsSync(outputPath)) {
 
 const executePython = (filepath, inputPath) => {
   return new Promise((resolve, reject) => {
+    
     exec(
       `python3 "${filepath}" < "${inputPath}"`,
       (error, stdout, stderr) => {
+        const startTime = process.hrtime.bigint(); // Start time
         if (error) {
           reject({ error, stderr });
         } else {
-          resolve(stdout);
+          const endTime = process.hrtime.bigint(); // End time
+          const timeUsed = Number(endTime - startTime) / 1e6; // Convert to milliseconds
+          const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // Convert to megabytes
+          resolve({ stdout, timeUsed, memoryUsed });
         }
       }
     );

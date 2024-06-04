@@ -37,7 +37,7 @@ app.post('/run', async (req, res) => {
     const inputPath = await generateInputFile(input);
     let output;
 
-    const startTime = process.hrtime.bigint(); // Start time
+
 
     try {
         switch (language) {
@@ -54,10 +54,7 @@ app.post('/run', async (req, res) => {
                 output = await executeCpp(filePath, inputPath);
                 break;
         }
-        const endTime = process.hrtime.bigint(); // End time
-        const executionTime = Number(endTime - startTime) / 1e6; // Convert to milliseconds
-        const memoryUsage = process.memoryUsage().heapUsed / 1024 / 1024; // Convert to megabytes
-        res.json({ output, executionTime, memoryUsage });
+        res.json({ output });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     } finally {
@@ -72,7 +69,7 @@ app.post('/run', async (req, res) => {
 });
 
 app.post('/runOntest', async (req, res) => {
-    const { language, code, testcases } = req.body;
+    const { language, code, testcases, timeLimit, memoryLimit } = req.body;
 
     const filePath = await generateFile(language, code);
     let outputs = [];
@@ -81,30 +78,41 @@ app.post('/runOntest', async (req, res) => {
     try {
         for (let testcase of testcases) {
             const inputPath = await generateInputFile(testcase.input);
-            let output;
-            const startTime = process.hrtime.bigint(); // Start time
+            let output, time = 0, memory = 0;
+
             switch (language) {
                 case 'c':
-                    output = await executeC(filePath, inputPath);
+                    const { stdout: cStdout, memoryUsed: cMemoryUsed, timeUsed: cTimeUsed } = await executeC(filePath, inputPath);
+                    output = cStdout;
+                    time = cTimeUsed;
+                    memory = cMemoryUsed;
                     break;
                 case 'java':
-                    output = await executeJava(filePath, inputPath);
+                    const { stdout: javaStdout, memoryUsed: javaMemoryUsed, timeUsed: javaTimeUsed } = await executeJava(filePath, inputPath);
+                    output = javaStdout;
+                    time = javaTimeUsed;
+                    memory = javaMemoryUsed;
                     break;
                 case 'python':
-                    output = await executePython(filePath, inputPath);
+                    const { stdout: pythonStdout, memoryUsed: pythonMemoryUsed, timeUsed: pythonTimeUsed } = await executePython(filePath, inputPath);
+                    output = pythonStdout;
+                    time = pythonTimeUsed;
+                    memory = pythonMemoryUsed;
                     break;
                 default:
-                    output = await executeCpp(filePath, inputPath);
+                    const { stdout: cppStdout, memoryUsed: cppMemoryUsed, timeUsed: cppTimeUsed } = await executeCpp(filePath, inputPath, timeLimit, memoryLimit);
+                    output = cppStdout;
+                    time = cppTimeUsed;
+                    memory = cppMemoryUsed;
                     break;
             }
-            const endTime = process.hrtime.bigint(); // End time
-            const executionTime = Number(endTime - startTime) / 1e6; // Convert to milliseconds
-            timeTaken = Math.max(timeTaken, executionTime);
-            const memoryUsage = process.memoryUsage().heapUsed / 1024 / 1024; // Convert to megabytes
-            memoryUsed = Math.max(memoryUsed, memoryUsage);
+
+            timeTaken = Math.max(timeTaken, time);
+
+            memoryUsed = Math.max(memoryUsed, memory);
             // If the output contains an error message, send it as a response
             if (output.includes('Error')) {
-                return res.status(400).json(new ApiError(400, {error: output}, "Compilation Error"));
+                return res.status(400).json(new ApiError(400, { error: output }, "Compilation Error"));
             }
 
             outputs.push(output.trim());
@@ -112,7 +120,7 @@ app.post('/runOntest', async (req, res) => {
             // Delete the input file after it's processed
             await unlinkAsync(inputPath);
         }
-        
+
         res.json({ outputs, timeTaken, memoryUsed });
     } catch (error) {
         // If an error occurs, send it as a response
