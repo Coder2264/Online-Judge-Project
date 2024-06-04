@@ -108,5 +108,17 @@ const getTasksName = async (req, res, next) => {
     }
 }
 
+const getConstraints= async (req, res, next) => {
+    try {
+        const taskId= req.body.taskId || req.body.problem_id;
+        const task = await Task.findById(taskId);
+        req.body.timeLimit = task.timeLimit;
+        req.body.memoryLimit = task.memoryLimit;
+        next();
+    }
+    catch (error) {
+        next(new ApiError(400, error.message));
+    }
+}
 
-export { createTask, updateTask, deleteTask, getTask, getAllTasks, getTaskName, getTasksName };
+export { createTask, updateTask, deleteTask, getTask, getAllTasks, getTaskName, getTasksName, getConstraints };

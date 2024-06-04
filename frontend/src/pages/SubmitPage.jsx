@@ -42,7 +42,7 @@ function ProblemSubmission() {
     const payload = {
       language,
       code,
-      problem_id: problemId,
+      problem_id: problemId
     };
 
     try {

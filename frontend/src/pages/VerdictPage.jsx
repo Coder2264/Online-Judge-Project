@@ -87,6 +87,14 @@ function VerdictPage() {
                 <h3 className="text-xl font-bold mr-2">Task Name:</h3>
                 <p className="text-lg">{verdict.taskName}</p>
               </div>
+              <div className="flex items-center mb-2">
+                <h3 className="text-xl font-bold mr-2">Time Taken:</h3>
+                <p className="text-lg">{verdict.timeTaken}ms</p>
+              </div>
+              <div className="flex items-center mb-2">
+                <h3 className="text-xl font-bold mr-2">Memory Used:</h3>
+                <p className="text-lg">{verdict.memoryUsed}MB</p>
+              </div>
             </div>
           </div>
         </div>

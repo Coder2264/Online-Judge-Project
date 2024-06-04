@@ -12,7 +12,9 @@ const createSubmission = async (data) => {
             language: data.language,
             code: data.code,
             verdict: data.status,
-            taskId: data.taskId
+            taskId: data.taskId,
+            timeTaken: data.timeTaken,
+            memoryUsed: data.memoryUsed
         };
         const submission = await Submission.create(submissionData);
         console.log(submission);
@@ -35,7 +37,7 @@ const deleteSubmission = async (req, res, next) => {
 const getSubmissions = async (req, res, next) => {
     try {
         const _id = req.user._id;
-        const submissions = await Submission.find({userId: _id});
+        const submissions = await Submission.find({ userId: _id });
         req.body.submissions = submissions;
         next();
     } catch (error) {
@@ -83,7 +85,9 @@ const EvaluateSubmission = async (req, res, next) => {
             user: req.user,
             language: req.body.language,
             code: req.body.code,
-            taskId: req.body.taskId || req.body.problem_id
+            taskId: req.body.taskId || req.body.problem_id,
+            timeTaken: req.body.timeTaken,
+            memoryUsed: req.body.memoryUsed,
         };
 
         for (let i = 0; i < expectedOutputs.length; i++) {
@@ -94,7 +98,18 @@ const EvaluateSubmission = async (req, res, next) => {
             }
         }
 
-        submissionData.status = "Accepted";
+        submissionData.status = "";
+        const timeLimit = parseFloat(req.body.timeLimit);
+        if (req.body.timeTaken > timeLimit*1000) {
+            submissionData.status = "Time Limit Exceeded";
+        }
+        if (req.body.memoryUsed > req.body.memoryLimit) {
+            submissionData.status = "Memory Limit Exceeded";
+        }
+        if (submissionData.status === "") {
+            submissionData.status = "Accepted";
+        }
+
         await createSubmission(submissionData);
         return res.status(200).json(new ApiResponse(200, { status: "Accepted" }));
     }
@@ -109,8 +124,8 @@ const getUserStats = asyncHandler(async (req, res) => {
     const uniqueProblemsSolved = await Submission.distinct('taskId', { userId: req.user._id, verdict: "Accepted" });
     profile.problemsSolved = uniqueProblemsSolved.length;
 
-    const submissions = await Submission.distinct('taskId',{ userId: req.user._id });
-    
+    const submissions = await Submission.distinct('taskId', { userId: req.user._id });
+
     profile.problemsAttempted = submissions.length;
 
     //console.log(profile);
@@ -184,4 +199,4 @@ const getHeatMapData = asyncHandler(async (req, res) => {
         ))
 })
 
-export { createSubmission,deleteSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission, getUserStats, getHeatMapData };
+export { createSubmission, deleteSubmission, getSubmissions, getSubmission, getMostRecentSubmission, EvaluateSubmission, getUserStats, getHeatMapData };
