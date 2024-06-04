@@ -47,7 +47,7 @@ export const deleteAllTestcases = async (req, res, next) => {
         if (!req.user.isAdmin) {
             throw new ApiError(403, "You are not authorized to delete testcases");
         }
-        const taskId = req.query.taskId;
+        const taskId = req.params._id;
         const testcases = await Testcase.deleteMany({ taskId: taskId });
         next();
     } catch (error) {

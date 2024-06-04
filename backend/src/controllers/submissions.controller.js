@@ -23,7 +23,7 @@ const createSubmission = async (data) => {
 
 const deleteSubmission = async (req, res, next) => {
     try {
-        const taskId = req.query.taskId;
+        const taskId = req.params._id;
         await Submission.deleteMany({ taskId: taskId });
         res.status(200).json({ message: 'Submission(s) deleted successfully.' });
     } catch (error) {
