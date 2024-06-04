@@ -14,8 +14,8 @@ function CreateTask() {
     format: "",
     testcases: [{ input: [""], output: [""] }, { input: [""], output: [""] }],
     tag: [],
-    timeLimit: "",
-    memoryLimit: ""
+    timeLimit: 1,
+    memoryLimit: 256
   });
 
   const navigate = useNavigate();
@@ -172,7 +172,7 @@ function CreateTask() {
         </div>
 
         <div className="mb-6 bg-white rounded shadow p-4">
-          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Time Limit</h2>
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Time Limit (in s)</h2>
           <div className="w-full px-3">
             <textarea
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"
@@ -184,7 +184,7 @@ function CreateTask() {
         </div>
 
         <div className="mb-6 bg-white rounded shadow p-4">
-          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Memory Limit</h2>
+          <h2 className="w-full px-3 mb-3 text-1xl font-bold text-gray-700">Memory Limit (in MB)</h2>
           <div className="w-full px-3">
             <textarea
               className="w-full px-4 py-2 leading-tight text-gray-700 bg-white border-2 border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-purple-500"

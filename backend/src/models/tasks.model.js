@@ -28,12 +28,12 @@ const taskSchema = new mongoose.Schema({
         default: []
     },
     timeLimit: {
-        type: String,
-        default: "1s"
+        type: Number,
+        default: 1          //in seconds
     },
     memoryLimit: {
-        type: String,
-        default: "256 MB"
+        type: Number,
+        default: 256        //in MB
     },
 }, {timestamps: true}
 )

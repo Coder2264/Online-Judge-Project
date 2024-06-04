@@ -16,6 +16,7 @@ async function compileAndRun(req, res, next) {
 async function compileAndRunMultiple(req, res, next) {
     try {
         const response = await axios.post('http://localhost:5000/runOntest', req.body);
+        
         req.body.outputs = response.data.outputs;
         req.body.timeTaken = response.data.timeTaken;
         req.body.memoryUsed = response.data.memoryUsed;

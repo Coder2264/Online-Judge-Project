@@ -15,8 +15,8 @@ function TaskPage() {
     format: '',
     constraints: '',
     testcases: [],
-    timeLimit: '',
-    memoryLimit: '',
+    timeLimit: 1,
+    memoryLimit: 256,
     tag: []
   });
 
@@ -79,9 +79,9 @@ function TaskPage() {
             ))}
           </div>
           <h2 className="font-bold text-2xl mb-2">Time Limit</h2>
-          <p className="mb-4">{task.timeLimit}</p>
+          <p className="mb-4">{task.timeLimit}s</p>
           <h2 className="font-bold text-2xl mb-2">Memory Limit</h2>
-          <p className="mb-4">{task.memoryLimit}</p>
+          <p className="mb-4">{task.memoryLimit}MB</p>
           <h2 className="font-bold text-2xl mb-2">Tags</h2>
           <ul className="list-disc pl-5 mb-4">
             {task.tag.map((onetag, index) => (

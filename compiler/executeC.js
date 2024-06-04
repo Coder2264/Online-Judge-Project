@@ -12,7 +12,7 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeC = (filepath, inputPath) => {
+const executeC = (filepath, inputPath, timeLimit, memoryLimit) => {
   const jobId = path.basename(filepath).split('.')[0];
   const outPath = path.join(outputPath, `${jobId}.o`);
 
