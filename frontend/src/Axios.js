@@ -1,5 +1,5 @@
 import axios from 'axios';
-const port = import.meta.env.VITE_BACKEND_PORT||3000;
+const port = import.meta.env.VITE_BACKEND_PORT;
 
 const axiosInstance = axios.create({
     baseURL: `http://localhost:${port}/api/v1`,
