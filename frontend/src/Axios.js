@@ -1,8 +1,8 @@
 import axios from 'axios';
-const port = import.meta.env.VITE_BACKEND_PORT;
+const url = import.meta.env.VITE_BACKEND_URL;
 
 const axiosInstance = axios.create({
-    baseURL: `http://localhost:${port}/api/v1`,
+    baseURL: `${url}/api/v1`,
     withCredentials: true // Needed to send cookies
 });
 
