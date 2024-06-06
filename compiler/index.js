@@ -35,26 +35,41 @@ app.post('/run', async (req, res) => {
 
     const filePath = await generateFile(language, code);
     const inputPath = await generateInputFile(input);
-    let output;
-
-
+    let output, timeTaken, memoryUsed;
 
     try {
         switch (language) {
             case 'c':
-                output = await executeC(filePath, inputPath);
+                const { stdout: cStdout, memoryUsed: cMemoryUsed, timeUsed: cTimeUsed } = await executeC(filePath, inputPath);
+                output = cStdout;
+                timeTaken = cTimeUsed;
+                memoryUsed = cMemoryUsed;
                 break;
             case 'java':
-                output = await executeJava(filePath, inputPath);
+                const { stdout: javaStdout, memoryUsed: javaMemoryUsed, timeUsed: javaTimeUsed } = await executeJava(filePath, inputPath);
+                output = javaStdout;
+                timeTaken = javaTimeUsed;
+                memoryUsed = javaMemoryUsed;
                 break;
             case 'python':
-                output = await executePython(filePath, inputPath);
+                const { stdout: pythonStdout, memoryUsed: pythonMemoryUsed, timeUsed: pythonTimeUsed } = await executePython(filePath, inputPath);
+                output = pythonStdout;
+                timeTaken = pythonTimeUsed;
+                memoryUsed = pythonMemoryUsed;
                 break;
             default:
-                output = await executeCpp(filePath, inputPath);
+                const { stdout: cppStdout, memoryUsed: cppMemoryUsed, timeUsed: cppTimeUsed } = await executeCpp(filePath, inputPath);
+                output = cppStdout;
+                timeTaken = cppTimeUsed;
+                memoryUsed = cppMemoryUsed;
                 break;
         }
-        res.json({ output });
+
+        if (output.includes('Error')) {
+            return res.status(400).json({ error: output });
+        }
+
+        res.json({ output: output.trim(), timeTaken, memoryUsed });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     } finally {

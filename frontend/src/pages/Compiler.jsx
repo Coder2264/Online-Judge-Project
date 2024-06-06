@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axiosInstance from '../Axios';
 import Navbar from '../components/Navbar';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 function Compiler() {
   const [code, setCode] = useState(`#include <iostream>\nusing namespace std;\nint main() {\n  int num1, num2, sum;\n  cin >> num1 >> num2;\n  sum = num1 + num2;\n  cout << "The sum of the two numbers is: " << sum;\n  return 0;\n}`);
@@ -20,12 +22,15 @@ function Compiler() {
       setOutput(data.output);
     } catch (error) {
       console.log(error.response);
+      const extractedMessage = error.response.data.message;
+      toast.error(extractedMessage, { autoClose: 2000 });
     }
   }
 
   return (
     <>
     <Navbar />
+    <ToastContainer />
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
       
       <h1 className="text-4xl font-bold mb-8 text-gray-800">Online Code Compiler</h1>

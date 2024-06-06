@@ -4,6 +4,8 @@ import ProblemCard from '../components/ProblemCard';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../Axios';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 function HomePage() {
   
@@ -20,6 +22,8 @@ function HomePage() {
         setIsAdmin(response.data.data.isAdmin); // Use the setter function to update isAdmin
       } catch (error) {
         console.log(error);
+        const extractedMessage = error.response.data.message;
+        toast.error(extractedMessage, { autoClose: 2000 });
         navigate('/');
       }
     };
@@ -34,6 +38,8 @@ function HomePage() {
       })
       .catch(error => {
         console.error('There was an error!', error);
+        const extractedMessage = error.response.data.message;
+        toast.error(extractedMessage, { autoClose: 2000 });
       });
   }, []);
 
@@ -44,6 +50,7 @@ function HomePage() {
   return (
     <div>
       <Navbar />
+      <ToastContainer />
       <h1 className="text-5xl font-extrabold text-center mb-10 text-blue-600">Problems</h1>
       <div className="flex flex-wrap">
         {problems.map((task) => (
