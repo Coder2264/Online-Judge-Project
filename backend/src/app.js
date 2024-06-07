@@ -20,7 +20,7 @@ const port= process.env.PORT
 
 app.use(cors(
     {
-        origin: ["http://localhost:5173",process.env.FRONTEND_URL],
+        origin: process.env.FRONTEND_URL,
         credentials: true
     }
 ));
@@ -48,7 +48,7 @@ app.use((err, req, res, next) => {
 connectDB();
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`)
+  console.log(`Server is running at http://${process.env.FRONTEND_URL}:${port}`)
 })
 
 export default app;

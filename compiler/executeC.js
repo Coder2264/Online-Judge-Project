@@ -23,7 +23,7 @@ const executeC = (filepath, inputPath) => {
       (error, stdout, stderr) => {
         const startTime = process.hrtime.bigint(); // Start time
         if (error) {
-          reject({ error, stderr });
+          resolve({stderr });
         } else {
           const endTime = process.hrtime.bigint(); // End time
           const timeUsed = Number(endTime - startTime) / 1e6; // Convert to milliseconds

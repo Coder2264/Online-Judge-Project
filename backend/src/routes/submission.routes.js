@@ -3,19 +3,22 @@ import { verifyJWT } from '../middlewares/authorization.js';
 const router= Router();
 import axios from 'axios';
 
+const compiler_url = process.env.COMPILER_URL;
+
 async function compileAndRun(req, res, next) {
     try {
-        const response = await axios.post('http://localhost:5000/run', req.body);
+        const response = await axios.post(`${compiler_url}/run`, req.body);
         
-        return res.json({output:response.data.output});
+        return res.status(200).json({output:response.data.output});
     } catch (error) {
-        res.status(500).json({ message: 'Error compiling code', error: error.message });
+        const errorBody=error.response.data;
+        res.status(500).json({ message: errorBody.error, error: errorBody.stderr });
     }
 }
 
 async function compileAndRunMultiple(req, res, next) {
     try {
-        const response = await axios.post('http://localhost:5000/runOntest', req.body);
+        const response = await axios.post(`${compiler_url}/runOntest`, req.body);
         
         req.body.outputs = response.data.outputs;
         req.body.timeTaken = response.data.timeTaken;

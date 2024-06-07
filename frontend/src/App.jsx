@@ -2,9 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import HomePage from './pages/HomePage';
-import TaskPage from './pages/TaskPage';
+import TaskSubmissionPage from './pages/TaskPage';
 import VerdictPage from './pages/VerdictPage';
-import SubmitPage from './pages/SubmitPage';
 import ProfilePage from './pages/ProfilePage';
 import CreateTask from './pages/CreateTask';
 import UpdateTask from './pages/UpdateTask';
@@ -29,9 +28,8 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/task/:taskId" element={<TaskPage/>}/>
+        <Route path="/task/:taskId" element={<TaskSubmissionPage/>}/>
         <Route path="/verdict" element={<VerdictPage/>}/>
-        <Route path="/submit" element={<SubmitPage/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/createTask" element={<CreateTask/>}/>
         <Route path="/editTask/:taskId" element={<UpdateTask/>}/>

@@ -2,11 +2,13 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utilities/ApiError.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { asyncHandler } from "../utilities/asyncHandler.js";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary"
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
+// Function to generate access and refresh tokens
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
         const user = await User.findById(userId)
@@ -24,7 +26,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
     }
 }
 
-
+// Function to register a user
 const registerUser = asyncHandler(async (req, res) => {
 
     //take user details from frontend
@@ -48,7 +50,6 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     //create user in database
-    let hashedpassword = await bcrypt.hash(password, 10);
     const user = await User.create({
         handle,
         fullName,
@@ -73,6 +74,7 @@ const registerUser = asyncHandler(async (req, res) => {
     );
 });
 
+// Function to login a user
 const loginUser = asyncHandler(async (req, res) => {
 
     //take user details from frontend
@@ -122,7 +124,7 @@ const loginUser = asyncHandler(async (req, res) => {
         )
 });
 
-
+// Function to logout a user
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
@@ -142,6 +144,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged Out"))
 })
 
+// Function to refresh access token
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
@@ -192,6 +195,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 })
 
+// Function to get current user
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
         .status(200)
@@ -202,6 +206,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         ))
 })
 
+// Function to get user type
 const getUserType = asyncHandler(async (req, res) => {
     return res
         .status(200)
@@ -214,6 +219,7 @@ const getUserType = asyncHandler(async (req, res) => {
         ))
 })
 
+// Function to upload profile photo
 const uploadProfilePhoto = asyncHandler(async (req, res) => {
     if (req.file) {
         const imageUrl = req.file.path;
@@ -246,6 +252,7 @@ const uploadProfilePhoto = asyncHandler(async (req, res) => {
     }
 })
 
+// Function to send mail
 const sendMail = asyncHandler(async (data) => {
     const { email, subject, text } = data;
 
@@ -275,6 +282,7 @@ const sendMail = asyncHandler(async (data) => {
     });
 })
 
+// Function to send password reset link
 const forgotPassword = asyncHandler(async (req, res) => {
     const { email } = req.body;
 
@@ -294,11 +302,12 @@ const forgotPassword = asyncHandler(async (req, res) => {
     user.resetPasswordToken = resetToken;
     user.save({ validateBeforeSave: false });
 
-    const toVisit = `http://localhost:5173/reset-password/${user._id}/${resetToken}`;
+    const toVisit = `${process.env.FRONTEND_URL}/reset-password/${user._id}/${resetToken}`;
     sendMail({ email, subject: "Password Reset", text: `Click on the link to reset your password: ${toVisit}` });
     res.json("Password reset link sent to your email");
 });
 
+// Function to reset password
 const resetPassword = async (req, res, next) => {
     try {
         const { password } = req.body;
