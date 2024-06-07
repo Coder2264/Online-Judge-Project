@@ -58,13 +58,16 @@ function TaskSubmissionPage() {
 
     try {
       const { data } = await axiosInstance.post('/submissions/submit', payload);
-      toast.success('Submission successful!', { autoClose: 2000 });
+      toast.success('Submission successful!', { autoClose: 1000 });
       setTimeout(() => {
         navigate('/verdict');
-      }, 2000);
+      }, 1000);
     } catch (error) {
-      const extractedMessage = error.response?.data?.message || 'Submission error';
-      toast.error(extractedMessage, { autoClose: 2000 });
+      let compilationError=error.response.data;
+      const errorMessage = (compilationError.message && compilationError.message.length <= 60) ? compilationError.message : 'Submission error';
+      const stderr = compilationError.error || '';
+      setError(stderr);
+      toast.error(errorMessage, { autoClose: 2000 });
     }
   };
 

@@ -94,44 +94,38 @@ app.post('/runOntest', async (req, res) => {
         let count=0;
         for (let testcase of testcases) {
             const inputPath = await generateInputFile(testcase.input);
-            let output, timeTaken = 0, memoryUsed = 0, stderr;
+            let output, time = 0, memory = 0, stderr;
             count++;
             switch (language) {
                 case 'c':
                     const { stderr: cStderr, stdout: cStdout, memoryUsed: cMemoryUsed, timeUsed: cTimeUsed } = await executeC(filePath, inputPath);
                     output = cStdout;
-                    timeTaken = cTimeUsed;
-                    memoryUsed = cMemoryUsed;
+                    time = cTimeUsed;
+                    memory = cMemoryUsed;
                     stderr = cStderr;
                     break;
                 case 'java':
                     const { stderr: javaStderr, stdout: javaStdout, memoryUsed: javaMemoryUsed, timeUsed: javaTimeUsed } = await executeJava(filePath, inputPath);
                     output = javaStdout;
-                    timeTaken = javaTimeUsed;
-                    memoryUsed = javaMemoryUsed;
+                    time = javaTimeUsed;
+                    memory = javaMemoryUsed;
                     stderr = javaStderr;
                     break;
                 case 'python':
                     const { stderr: pythonStderr, stdout: pythonStdout, memoryUsed: pythonMemoryUsed, timeUsed: pythonTimeUsed } = await executePython(filePath, inputPath);
                     output = pythonStdout;
-                    timeTaken = pythonTimeUsed;
-                    memoryUsed = pythonMemoryUsed;
+                    time = pythonTimeUsed;
+                    memory = pythonMemoryUsed;
                     stderr = pythonStderr;
                     break;
                 default:
                     const { stderr: cppStderr, stdout: cppStdout, memoryUsed: cppMemoryUsed, timeUsed: cppTimeUsed } = await executeCpp(filePath, inputPath);
                     output = cppStdout;
-                    timeTaken = cppTimeUsed;
-                    memoryUsed = cppMemoryUsed;
+                    time = cppTimeUsed;
+                    memory = cppMemoryUsed;
                     stderr = cppStderr;
                     break;
             }
-
-            // If the output contains an error message, send it as a response
-            if (output.includes('Error')) {
-                return res.status(400).json(new ApiError(400, {testcase:count ,error: stderr }, "Compilation Error"));
-            }
-
 
             timeTaken = Math.max(timeTaken, time);
             memoryUsed = Math.max(memoryUsed, memory);
@@ -144,7 +138,7 @@ app.post('/runOntest', async (req, res) => {
         res.status(200).json({ outputs, timeTaken, memoryUsed });
     } catch (error) {
         // If an error occurs, send it as a response
-        return res.status(500).json({ error: error.message });
+        res.status(500).json({ success: false, error: error.message,stderr:stderr });
     } finally {
         // Ensure the code file is deleted after processing
         try {

@@ -25,7 +25,8 @@ async function compileAndRunMultiple(req, res, next) {
         req.body.memoryUsed = response.data.memoryUsed;
         next();
     } catch (error) {
-        res.status(500).json({ message: 'Error compiling code', error: error.message });
+        const errorBody=error.response.data;
+        res.status(500).json({ message: errorBody.error, error: errorBody.stderr });
     }
 }
 
