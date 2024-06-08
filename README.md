@@ -1,16 +1,30 @@
-# Online Judge Platform
+# AlgoForces - An Online Judge Platform
 
-Welcome to the Online Judge Platform! This project is a web-based system that allows users to practice coding by solving problems, submitting solutions, and receiving immediate feedback.
+Welcome to the AlgoForces! This project is a web-based system that allows users to practice coding by solving problems, submitting solutions, and receiving immediate feedback.
 
 ## Table of Contents
+- [Screenshots](#screenshots-of-the-website)
+- [Demo Video](#demo-video)
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 
+## Screenshots of the Website
 ![Home Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/xdjyw7mxegrcboth3k42.png)
 *Home Page*
+
+![Problem Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/qdjfrneb8uurqysj8k4v.png)
+
+![Problem Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/xpmim1rosaztcvhdi8rx.png)
+*Problem Page*
+
+## Demo Video
+
+[Watch the demo video](https://www.loom.com/share/10678c1fff49486d9a2d6460cc91071e?sid=94fd7034-fb5c-4fd4-9a3c-1870aa323a0c)
+
+*Click the link to watch the demo video*
 
 ## Features
 - User Authentication
