@@ -9,6 +9,8 @@ Welcome to the Online Judge Platform! This project is a web-based system that al
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 
+![Home Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/xdjyw7mxegrcboth3k42.png)
+*Home Page*
 
 ## Features
 - User Authentication
@@ -88,19 +90,25 @@ Make sure you have the following software installed on your local machine:
     PASSWORD= 
     ```
 
-6. **Start the backend server**
+6. **Set up environment variables**
+    Create a `.env` file in the `frontend` directory and add your configuration details:
+    ```env
+    VITE_BACKEND_URL = http://localhost:3000
+    ```
+
+7. **Start the backend server**
     ```bash
     cd backend
     npm start
     ```
 
-7. **Start the frontend server**
+8. **Start the frontend server**
     ```bash
     cd ../frontend
     npm start
     ```
 
-8. **Start the compiler server**
+9. **Start the compiler server**
     ```bash
     cd ../compiler
     npm start
@@ -111,7 +119,7 @@ Make sure you have the following software installed on your local machine:
 Once the installation is complete, you can start using the platform by navigating to `http://localhost:5173` in your web browser.
 
 - **Sign Up**: Create a new account.
-- **Login**: Access your dashboard.
+- **Login**: Login to your account.
 - **Submit Code**: Choose a problem, write your solution in the editor, and submit it for evaluation.
 - **View Results**: Check the results of your submissions in the verdict.
 
