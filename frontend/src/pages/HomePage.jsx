@@ -2,7 +2,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProblemCard from '../components/ProblemCard';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../Axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -43,10 +43,6 @@ function HomePage() {
       });
   }, []);
 
-  const addTaskHandler = () => {
-    navigate('/createTask');
-  }
-
   return (
     <div>
       <Navbar />
@@ -58,14 +54,14 @@ function HomePage() {
         ))}
       </div>
       {isAdmin && (
-        <div className="flex justify-center items-center mt-4"> {/* Added this div */}
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            onClick={addTaskHandler}
-          >
-            Add Task
-          </button>
-        </div>
+        <div className="flex justify-center items-center mt-4">
+        <Link
+          to="/createTask"
+          className="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 transform hover:scale-105"
+        >
+          Add Task
+        </Link>
+      </div>
       )}
       <Footer />
     </div>

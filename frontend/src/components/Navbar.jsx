@@ -19,39 +19,49 @@ function Navbar() {
   }
 
   return (
-    <nav className="mt-0 mb-0 flex justify-between bg-blue-500 text-white w-full p-4">
-      <div className="flex items-center p-1 bg-blue-500 text-white">
-        <img src={logo} alt="logo" className="h-10 w-10" />
-        {/*Here anchor tag makes it a link and e.preventDefault prevents full page reload when it is clicked directly */}
-        <h1 
-        className="inline-block ml-2 text-2xl cursor-pointer hover:text-blue-300" 
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/home');
-        }}
-      >
-        <a href="/home" className="no-underline">AlgoForces</a>
-      </h1>
-      <h1 
-        className="inline-block ml-2 text-2xl cursor-pointer hover:text-blue-300" 
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/compiler');
-        }}
-      >
-        <a href="/compiler" className="no-underline">Compiler</a>
-      </h1>
+    <nav className="mt-0 mb-0 flex justify-between bg-gradient-to-r from-blue-600 to-blue-800 text-white w-full p-4 shadow-md">
+      <div className="flex items-center p-1">
+        <img src={logo} alt="logo" className="h-10 w-10 rounded-full shadow-lg" />
+        <h1
+          className="inline-block ml-3 text-2xl font-semibold cursor-pointer hover:text-blue-300 transition duration-300"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/home');
+          }}
+        >
+          <a href="/home" className="no-underline">AlgoForces</a>
+        </h1>
+        <h1
+          className="inline-block ml-3 text-2xl font-semibold cursor-pointer hover:text-blue-300 transition duration-300"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/mysubmissions');
+          }}
+        >
+          <a href="/mysubmissions" className="no-underline">My Submissions</a>
+        </h1>
       </div>
-      <div className="flex">
-
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={()=>{navigate('/profile')}}>
-          {handle}
+      <div className="flex items-center">
+        <button
+          className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-700 hover:to-red-900 text-white font-bold py-2 px-4 rounded-full shadow-md mr-3 transition duration-300 transform hover:scale-105"
+          onClick={(e) => {
+            e.preventDefault();
+             navigate('/profile'); 
+            }
+          }
+        >
+        <a href="/profile" className="no-underline">{handle}</a>
         </button>
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={logOutHandler}>
+        <button
+          className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-700 hover:to-red-900 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300 transform hover:scale-105"
+          onClick={logOutHandler}
+        >
           Logout
         </button>
       </div>
     </nav>
+
+
   );
 }
 

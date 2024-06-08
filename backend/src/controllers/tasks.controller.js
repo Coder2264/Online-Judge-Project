@@ -101,6 +101,7 @@ const getTasksName = async (req, res, next) => {
             submissions[i].taskName = task.name;
         }
         req.body.submissions = submissions;
+        req.body.handle= req.user.handle;
         res.status(200).json(new ApiResponse(200, req.body));
     }
     catch (error) {

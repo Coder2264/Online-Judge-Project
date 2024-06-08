@@ -273,7 +273,7 @@ const sendMail = asyncHandler(async (data) => {
 
     transporter.sendMail(mailOptions, function (error, info) {  //using callback rather than promise for handling asynchronous code
         if (error) {
-            console.log(error);
+            //console.log(error);
             throw new ApiError(500, "Error sending email");
         } else {
             console.log('Email sent: ' + info.response);
@@ -342,6 +342,22 @@ const resetPassword = async (req, res, next) => {
     }
 };
 
+const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({}).select('-password -refreshToken -resetPasswordToken');
+    res.status(200).json(new ApiResponse(200, users, "All users fetched successfully"));
+});
+
+const toggleAdmin = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    user.isAdmin = !user.isAdmin;
+    await user.save();
+    res.status(200).json(new ApiResponse(200, {}, "User mode toggled successfully"));
+});
+
 export {
     registerUser,
     loginUser,
@@ -351,5 +367,7 @@ export {
     getUserType,
     uploadProfilePhoto,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    getAllUsers,
+    toggleAdmin
 }

@@ -14,12 +14,12 @@ if (!fs.existsSync(outputPath)) {
 
 const executeJava = (filepath, inputPath) => {
   return new Promise((resolve, reject) => {
-    
+    const startTime = process.hrtime.bigint(); // Start time
     exec(
       `java "${filepath}" < "${inputPath}"`,
       { cwd: outputPath },
       (error, stdout, stderr) => {
-        const startTime = process.hrtime.bigint(); // Start time
+        
         if (error) {
           resolve({stderr });
         } else {

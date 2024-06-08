@@ -24,8 +24,6 @@ const executePython = (filepath, inputPath) => {
         const memoryUsed = process.memoryUsage().heapUsed / 1024 / 1024; // Convert to megabytes
 
         if (error) {
-          //console.log('Python error:', error.message);
-          //console.log('Python stderr:', stderr);
           resolve({ stderr });
         } else {
           resolve({ stdout, timeUsed, memoryUsed });

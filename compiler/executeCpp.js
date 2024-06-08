@@ -17,10 +17,11 @@ const executeCpp = (filepath, inputPath) => {
   const outPath = path.join(outputPath, `${jobId}.o`);
 
   return new Promise((resolve, reject) => {
+    const startTime = process.hrtime.bigint(); // Start time
     exec(
       `g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && ./"${jobId}.o" < "${inputPath}"`,
       (error, stdout, stderr) => {
-        const startTime = process.hrtime.bigint(); // Start time
+        
         if (error) {
           resolve({stderr });
         } else {
