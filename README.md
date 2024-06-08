@@ -8,8 +8,7 @@ Welcome to the Online Judge Platform! This project is a web-based system that al
 - [Installation](#installation)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Features
 - User Authentication
