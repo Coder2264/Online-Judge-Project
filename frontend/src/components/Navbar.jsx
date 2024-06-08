@@ -38,7 +38,7 @@ function Navbar() {
             navigate('/mysubmissions');
           }}
         >
-          <a href="/mysubmissions" className="no-underline">My Submissions</a>
+          <a href="/mysubmissions" className="no-underline">MySubmissions</a>
         </h1>
       </div>
       <div className="flex items-center">
