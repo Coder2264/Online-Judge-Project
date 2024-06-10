@@ -6,10 +6,15 @@ Welcome to the AlgoForces! This project is a web-based system that allows users 
 - [Screenshots](#screenshots-of-the-website)
 - [Demo Video](#demo-video)
 - [Features](#features)
+- [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
 
 ## Screenshots of the Website
 ![Home Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/xdjyw7mxegrcboth3k42.png)
@@ -71,6 +76,25 @@ Welcome to the AlgoForces! This project is a web-based system that allows users 
 - Admin Panel
   - For user promotion to admin or demotion to user
 
+## Technologies Used
+
+![Node.js](https://nodejs.org/static/images/logo.svg)
+- Node.js
+
+![Express.js](https://expressjs.com/images/express-facebook-share.png)
+- Express.js
+
+![MongoDB](https://webassets.mongodb.com/_com_assets/cms/MongoDB_Logo_FullColorBlack_RGB-4td3yuxzjs.png)
+- MongoDB
+
+![React.js](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png)
+- React.js
+
+![Cloudinary](https://res.cloudinary.com/cloudinary/image/upload/new_cloudinary_logo_square.png)
+- Cloudinary
+
+![Docker](https://pbs.twimg.com/profile_images/1749553035133566976/hMA0FbDk_400x400.jpg)
+- Docker
 
 ## Getting Started
 
@@ -162,6 +186,8 @@ Once the installation is complete, you can start using the platform by navigatin
 - **Login**: Login to your account.
 - **Submit Code**: Choose a problem, write your solution in the editor, and submit it for evaluation.
 - **View Results**: Check the results of your submissions in the verdict.
+- **See stats**: Check the number and distributions of problems solved.
+
 
 ## Project Structure
 
@@ -195,3 +221,30 @@ online-judge/
 │   ├── executeJave.js
 │   └── package.json
 └── README.md
+```
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+
+Md Kamran - akhtarkamran2004@gmail.com
+
+Project Link: [https://github.com/Coder2264/Online-Judge-Project](https://github.com/Coder2264/Online-Judge-Project)
+
+## Acknowledgements
+
+* [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+* [Img Shields](https://shields.io)
+* [Choose an Open Source License](https://choosealicense.com)
