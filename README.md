@@ -20,6 +20,21 @@ Welcome to the AlgoForces! This project is a web-based system that allows users 
 ![Problem Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/xpmim1rosaztcvhdi8rx.png)
 *Problem Page*
 
+![Profile Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/rvhrvqztzgtq0u9mzszj.png)
+*Profile Page*
+
+![Admin Panel](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/hpoyyi9rhof07j3marp5.png)
+*Admin Panel*
+
+![Submissions Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879686/MyStorage/tqtxygk2nb2bde284g6n.png)
+*Submisssions Page*
+
+![Testcase Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879686/MyStorage/bm9pvemgn2jw60mxpnfw.png)
+*Testcase Page*
+
+![Edit Problem Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879686/MyStorage/vn1h5ucv34fov1xgkmnf.png)
+*Edit Problem Page*
+
 ## Demo Video
 
 [Watch the demo video](https://www.loom.com/share/10678c1fff49486d9a2d6460cc91071e?sid=94fd7034-fb5c-4fd4-9a3c-1870aa323a0c)
@@ -31,6 +46,10 @@ Welcome to the AlgoForces! This project is a web-based system that allows users 
   - Sign Up
   - Login
   - Logout
+  - Forgot Password
+- User Authorization
+  - Two types of Users- Admin and User
+  - Different rendering for each type
 - Problem Management
   - Add/Edit/Delete Problems
   - List Problems
@@ -40,11 +59,18 @@ Welcome to the AlgoForces! This project is a web-based system that allows users 
   - Code Compilation
   - Code Execution
   - Test Case Validation
-- User Dashboard
+- Submission Verdict
   - View Submitted Solutions
   - View Submission Status (Passed/Failed)
 - Notifications
   - Success and Error Messages
+- Profile Page
+  - User Details
+  - Profile Photo
+  - Heatmap of submissions
+- Admin Panel
+  - For user promotion to admin or demotion to user
+
 
 ## Getting Started
 
@@ -156,8 +182,9 @@ online-judge/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
-│   │   ├── App.js
-│   │   └── index.js
+│   │   ├── App.jsx
+│   │   ├── Axios.js
+│   │   └── main.jsx
 │   ├── .env
 │   └── package.json
 ├── compiler/
