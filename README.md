@@ -1,44 +1,111 @@
 # AlgoForces - An Online Judge Platform
 
-Welcome to the AlgoForces! This project is a web-based system that allows users to practice coding by solving problems, submitting solutions, and receiving immediate feedback.
+AlgoForces is an **online-judge platform** that allows users to practice data structures and algorithms by solving problems, submitting solutions, and receiving immediate feedback.
 
-## Table of Contents
-- [Screenshots](#screenshots-of-the-website)
-- [Demo Video](#demo-video)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
+
+---
+
+## 🖼️ Architecture Overview
+
+This system is an **Online Judge** platform designed for scalable, secure, and efficient execution of user code submissions.
+
+![Architecture Diagram](https://res.cloudinary.com/dcij8s42h/image/upload/v1757482737/Screenshot_2025-09-10_at_11.07.30_AM_sx9zzb.png)
+
+---
+
+## 🔹 Components
+
+* **API Gateway**
+
+  * Entry point for all user requests.
+  * Handles authentication, routing, and rate-limiting.
+
+* **User Service**
+
+  * Manages user accounts, profiles, and photos.
+  * Stores data in **User DB** and **Photo DB**.
+
+* **Problem Service**
+
+  * Provides problem statements, public testcases and metadata.
+  * Fetches data from **Problem DB** with a **Cache (Redis)** layer for fast access.
+
+* **Submission Service**
+
+  * Handles new submissions (`/submit`).
+  * Persists submissions in **Submission DB**.
+  * Submissions are queued for compilation via **SQS (Queue)**.
+
+* **Compiler Service**
+
+  * Consumes jobs from **SQS**.
+  * Dispatches code to **Isolated Workers** (Docker containers) for secure execution.
+  * Fetches problem/testcase metadata from **Cache → DBs**.
+  * Stores execution results back in **Submission DB**.
+
+* **Isolated Workers (Autoscaled Pool)**
+
+  * Sandbox environments (Docker) for secure, language-specific code execution.
+  * Scaled dynamically based on load.
+
+* **Databases**
+
+  * **User DB** – user data.
+  * **Photo DB** – user profile photos.
+  * **Problem DB** – problem statements and metadata.
+  * **Testcases DB** – hidden input/output test cases.
+  * **Submission DB** – stores submissions and results.
+
+---
+
+## 🔹 Request Lifecycle
+
+1. **User submits code** (`/submit`) → handled by **Submission Service** → stored in **Submission DB**.
+2. **Submission Service** sends job to **SQS** → **Compiler Service** picks it up.
+3. **Compiler Service** fetches problem/testcases (via **Cache → DBs**).
+4. **Compiler Service** dispatches the job to an **Isolated Worker**.
+5. **Isolated Worker** runs the code securely, compares output against testcases, measures time and memory per testcase.
+6. Execution results are returned to **Compiler Service**.
+7. Results are saved in **Submission DB**.
+8. User retrieves results by polling (`/submission/:id`) or via UI refresh.
+
+---
+
+## 🔹 Key Features
+
+* ✅ Secure sandboxing (Docker-based Isolated Workers)
+* ✅ Asynchronous processing with **SQS**
+* ✅ Scalable compilation/execution pool (autoscaling workers)
+* ✅ Caching layer (Redis) for performance
+* ✅ Clean separation of services (microservices)
+
+---
 
 ## Screenshots of the Website
-![Home Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/xdjyw7mxegrcboth3k42.png)
-*Home Page*
 
+### Home Page
+![Home Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/xdjyw7mxegrcboth3k42.png)
+
+### Problem Page
 ![Problem Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/qdjfrneb8uurqysj8k4v.png)
 
 ![Problem Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/xpmim1rosaztcvhdi8rx.png)
-*Problem Page*
 
+### Profile Page
 ![Profile Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/rvhrvqztzgtq0u9mzszj.png)
-*Profile Page*
 
+### Admin Panel
 ![Admin Panel](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879687/MyStorage/hpoyyi9rhof07j3marp5.png)
-*Admin Panel*
 
+### Submisssions Page
 ![Submissions Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879686/MyStorage/tqtxygk2nb2bde284g6n.png)
-*Submisssions Page*
 
+### Testcase Page
 ![Testcase Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879686/MyStorage/bm9pvemgn2jw60mxpnfw.png)
-*Testcase Page*
 
+### Edit Problem Page
 ![Edit Problem Page](https://res.cloudinary.com/dftyqcjar/image/upload/v1717879686/MyStorage/vn1h5ucv34fov1xgkmnf.png)
-*Edit Problem Page*
+
 
 ## Demo Video
 
@@ -67,8 +134,6 @@ Welcome to the AlgoForces! This project is a web-based system that allows users 
 - Submission Verdict
   - View Submitted Solutions
   - View Submission Status (Passed/Failed)
-- Notifications
-  - Success and Error Messages
 - Profile Page
   - User Details
   - Profile Photo
@@ -76,25 +141,6 @@ Welcome to the AlgoForces! This project is a web-based system that allows users 
 - Admin Panel
   - For user promotion to admin or demotion to user
 
-## Technologies Used
-
-![Node.js](https://nodejs.org/static/images/logo.svg)
-- Node.js
-
-![Express.js](https://expressjs.com/images/express-facebook-share.png)
-- Express.js
-
-![MongoDB](https://webassets.mongodb.com/_com_assets/cms/MongoDB_Logo_FullColorBlack_RGB-4td3yuxzjs.png)
-- MongoDB
-
-![React.js](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png)
-- React.js
-
-![Cloudinary](https://res.cloudinary.com/cloudinary/image/upload/new_cloudinary_logo_square.png)
-- Cloudinary
-
-![Docker](https://pbs.twimg.com/profile_images/1749553035133566976/hMA0FbDk_400x400.jpg)
-- Docker
 
 ## Getting Started
 
@@ -106,8 +152,8 @@ Make sure you have the following software installed on your local machine:
 - [Node.js](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
 - [MongoDB](https://www.mongodb.com/)
-- [Docker](https://www.docker.com/) (Optional, for running the judge in a containerized environment)
-
+- [Docker](https://www.docker.com/)
+  
 ### Installation
 
 1. **Clone the repository**
@@ -218,30 +264,14 @@ online-judge/
 │   ├── executeCpp.js
 │   ├── executeC.js
 │   ├── executePython.js
-│   ├── executeJave.js
+│   ├── executeJava.js
 │   └── package.json
 └── README.md
 ```
 
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-## Contact
-
-Md Kamran - akhtarkamran2004@gmail.com
-
-Project Link: [https://github.com/Coder2264/Online-Judge-Project](https://github.com/Coder2264/Online-Judge-Project)
 
 ## Acknowledgements
 
